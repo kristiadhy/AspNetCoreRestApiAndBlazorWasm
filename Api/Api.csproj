@@ -17,12 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BionPro.Application\Application.csproj" />
-    <ProjectReference Include="..\BionPro.Domain\Domain.csproj" />
-    <ProjectReference Include="..\BionPro.Persistence\Persistence.csproj" />
-    <ProjectReference Include="..\BionPro.Presentation\Presentation.csproj" />
-    <ProjectReference Include="..\BionPro.Services.Abstractions\Services.Contracts.csproj" />
-    <ProjectReference Include="..\BionPro.Services\Services.csproj" />
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\Presentation\Presentation.csproj" />
+    <ProjectReference Include="..\Services.Abstractions\Services.Contracts.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>

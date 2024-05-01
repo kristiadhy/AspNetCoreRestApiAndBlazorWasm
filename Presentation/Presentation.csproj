@@ -14,9 +14,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BionPro.Application\Application.csproj" />
-		<ProjectReference Include="..\BionPro.Domain\Domain.csproj" />
-		<ProjectReference Include="..\BionPro.Services.Abstractions\Services.Contracts.csproj" />
+		<ProjectReference Include="..\Application\Application.csproj" />
+		<ProjectReference Include="..\Domain\Domain.csproj" />
+		<ProjectReference Include="..\Services.Abstractions\Services.Contracts.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

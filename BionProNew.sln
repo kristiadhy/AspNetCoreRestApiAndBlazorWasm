@@ -3,25 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "BionPro.Domain\Domain.csproj", "{F22975F5-5DD4-47FE-B631-DA9ED081007C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{F22975F5-5DD4-47FE-B631-DA9ED081007C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "BionPro.Application\Application.csproj", "{077209CF-A21D-434A-9B25-A9252573FFE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{077209CF-A21D-434A-9B25-A9252573FFE0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Domain", "01.Domain", "{4F3F1A48-C8B5-42E7-9EFF-D4BD371E3AD4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.Infrastructure", "03.Infrastructure", "{123AA620-252C-42D9-B5CE-E4BC59A98383}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "BionPro.Persistence\Persistence.csproj", "{4C20338D-2B08-48A7-822F-D221ACA078E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{4C20338D-2B08-48A7-822F-D221ACA078E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "BionPro.Presentation\Presentation.csproj", "{D243C5A9-6432-4721-A5D4-058561D9414F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "Presentation\Presentation.csproj", "{D243C5A9-6432-4721-A5D4-058561D9414F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.Presentation", "04.Presentation", "{8550B534-22E9-4CA6-8ED1-80EA21ECD548}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "BionPro.Api\Api.csproj", "{B973A659-B636-4287-A928-9E92E9661DE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{B973A659-B636-4287-A928-9E92E9661DE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "BionPro.Services\Services.csproj", "{55126ED8-3F0B-4577-A842-F454D96F5B13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{55126ED8-3F0B-4577-A842-F454D96F5B13}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Contracts", "BionPro.Services.Abstractions\Services.Contracts.csproj", "{69455901-60E8-43A6-BF67-B723113373D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Contracts", "Services.Abstractions\Services.Contracts.csproj", "{69455901-60E8-43A6-BF67-B723113373D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Service", "02.Service", "{56862D25-886D-4C10-9F3B-F44F2C482437}"
 EndProject
