@@ -1,0 +1,6 @@
+@BionPro.Api_HostAddress = http://localhost:5220
+
+GET {{BionPro.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
