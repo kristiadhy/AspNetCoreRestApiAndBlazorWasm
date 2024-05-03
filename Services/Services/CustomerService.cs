@@ -5,7 +5,7 @@ using AutoMapper;
 using Domain.DTO;
 using Domain.Entities;
 using Domain.Parameters;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using Services.Contracts;
 
 namespace Services;
@@ -14,11 +14,10 @@ internal sealed class CustomerService(IRepositoryManager repositoryManager, IMap
 {
     private readonly IRepositoryManager _repositoryManager = repositoryManager;
     private readonly IMapper _mapper = mapper;
-    //private readonly ILogger<CustomerService> _logger;
 
     public async Task<(IEnumerable<CustomerDTO> customerDTO, MetaData metaData)> GetByParameters(Guid customerID, CustomerParam customerParam, bool trackChanges, CancellationToken cancellationToken = default)
     {
-        //_logger.LogInformation($"Get customer with ID : {customerID}");
+        Log.Information($"Get customer with ID : {customerID}");
 
         var customers = await _repositoryManager.CustomerRepo.GetByParameters(customerParam, trackChanges);
         if (!customers.Any())
@@ -31,7 +30,7 @@ internal sealed class CustomerService(IRepositoryManager repositoryManager, IMap
 
     public async Task<IEnumerable<CustomerDTO>> GetByCustomerID(Guid customerID, bool trackChanges, CancellationToken cancellationToken = default)
     {
-        //_logger.LogInformation($"Get customer with ID : {customerID}");
+        Log.Information($"Get customer with ID : {customerID}");
 
         var customer = await _repositoryManager.CustomerRepo.GetByID(customerID, trackChanges);
         if (customer is null)
@@ -49,7 +48,7 @@ internal sealed class CustomerService(IRepositoryManager repositoryManager, IMap
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult);
 
-        //_logger.LogInformation("Insert new customer : {customerName}", customerDto.CustomerName);
+        Log.Information("Insert new customer : {customerName}", customerDto.CustomerName);
 
         var customerMD = _mapper.Map<CustomerMD>(customerDto);
         _repositoryManager.CustomerRepo.CreateEntity(customerMD, trackChanges, cancellationToken);
@@ -69,7 +68,7 @@ internal sealed class CustomerService(IRepositoryManager repositoryManager, IMap
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult);
 
-        //_logger.LogInformation("Update customer : {customerName}", customerDto.CustomerName);
+        Log.Information("Update customer : {customerName}", customerDto.CustomerName);
 
         _mapper.Map<CustomerMD>(customerDto);
         //_repositoryManager.CustomerRepo.UpdateEntity(customerMD, trackChanges, cancellationToken);
@@ -88,7 +87,7 @@ internal sealed class CustomerService(IRepositoryManager repositoryManager, IMap
         if (customerForDelete is null)
             throw new CustomerIDNotFoundException(customerID);
 
-        //_logger.LogInformation("Delete customer : {customerName}", customerForDelete.CustomerName);
+        Log.Information("Delete customer : {customerName}", customerForDelete.CustomerName);
 
         _repositoryManager.CustomerRepo.DeleteEntity(customerForDelete, trackChanges, cancellationToken);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
