@@ -15,33 +15,32 @@ public class SwaggerInstaller : IServiceInstallers
                 Version = "v1"
             });
 
-            //var jwtSecurityScheme = new OpenApiSecurityScheme()
-            //{
-            //    In = ParameterLocation.Header,
-            //    Description = @"JWT Authorization header using the Bearer scheme. 
-            //    Enter your token in the text input below.",
-            //    Name = "Authorization", //IMPORTANT! : Please don't change with anything other than Authorization
-            //    Type = SecuritySchemeType.Http,
-            //    BearerFormat = "JWT",
-            //    Scheme = "Bearer"
-            //};
+            var jwtSecurityScheme = new OpenApiSecurityScheme()
+            {
+                In = ParameterLocation.Header,
+                Description = "Please provide a valid token",
+                Name = "Authorization", //IMPORTANT! : Please don't change with anything other than Authorization
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            };
 
-            //options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+            options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
 
-            //options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            //{
-            //    {
-            //        new OpenApiSecurityScheme
-            //        {
-            //        Reference = new OpenApiReference
-            //            {
-            //            Type = ReferenceType.SecurityScheme,
-            //            Id = "Bearer"
-            //            }
-            //        },
-            //        new List<string>()
-            //    }
-            //});
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                    Reference = new OpenApiReference
+                        {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                        }
+                    },
+                    new List<string>()
+                }
+            });
         });
     }
 }

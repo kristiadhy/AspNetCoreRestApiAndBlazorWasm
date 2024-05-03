@@ -11,7 +11,6 @@ internal sealed class CustomerConfiguration : IEntityTypeConfiguration<CustomerM
         builder.ToTable("M01CUSTOMERS");
 
         builder.HasKey(c => c.CustomerID);
-        //builder.Property(c => c.CustomerID).ValueGeneratedOnAdd();
         builder.Property(c => c.CustomerName).IsRequired().HasMaxLength(200);
         builder.Property(c => c.PhoneNumber).HasMaxLength(50);
         builder.Property(c => c.Email).HasMaxLength(100);
