@@ -94,41 +94,41 @@ public static class ServiceExtensions
 
     //NOTE : This method is to hard-coding the serilog. In this project we use different approach which we put all the serilog configuration in the appsettings.json
     //We better used the second approach for more flexibility. For example, we want to set different minimum level in development environment and production environment, it's easy to implement that using appsettings.json.
-    public static IServiceCollection ConfigureSerilog(this IServiceCollection services)
-    {
-        const string logPath = "Logs/appLog-.log";
+    //public static IServiceCollection ConfigureSerilog(this IServiceCollection services)
+    //{
+    //    const string logPath = "Logs/appLog-.log";
 
-        //var logger = new LoggerConfiguration()
-        //    .MinimumLevel.Information()
-        //    .Enrich.FromLogContext()
-        //    .WriteTo.Console()
-        //    .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-        //    .CreateLogger();
+    //    //var logger = new LoggerConfiguration()
+    //    //    .MinimumLevel.Information()
+    //    //    .Enrich.FromLogContext()
+    //    //    .WriteTo.Console()
+    //    //    .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
+    //    //    .CreateLogger();
 
-        //services.AddSerilog(logger);
+    //    //services.AddSerilog(logger);
 
-        //-----
+    //    //-----
 
-        //Log.Logger = new LoggerConfiguration()
-        //    .MinimumLevel.Information()
-        //    .Enrich.FromLogContext()
-        //    .WriteTo.Console()
-        //    .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-        //    .CreateLogger();
+    //    //Log.Logger = new LoggerConfiguration()
+    //    //    .MinimumLevel.Information()
+    //    //    .Enrich.FromLogContext()
+    //    //    .WriteTo.Console()
+    //    //    .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
+    //    //    .CreateLogger();
 
-        //services.AddLogging(b => b.AddSerilog(dispose: true));
+    //    //services.AddLogging(b => b.AddSerilog(dispose: true));
 
-        //-----
+    //    //-----
 
-        Serilog.ILogger logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
-            .CreateLogger();
+    //    Serilog.ILogger logger = new LoggerConfiguration()
+    //        .MinimumLevel.Information()
+    //        .Enrich.FromLogContext()
+    //        .WriteTo.Console()
+    //        .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
+    //        .CreateLogger();
 
-        services.AddSingleton(logger);
+    //    services.AddSingleton(logger);
 
-        return services;
-    }
+    //    return services;
+    //}
 }

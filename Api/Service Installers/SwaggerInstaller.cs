@@ -11,7 +11,7 @@ public class SwaggerInstaller : IServiceInstallers
         {
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "BionPro",
+                Title = "CleanArchitecture.Api",
                 Version = "v1"
             });
 

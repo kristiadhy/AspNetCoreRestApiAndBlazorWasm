@@ -9,9 +9,9 @@ public sealed class ServiceManager : IServiceManager
 {
     private readonly Lazy<ICustomerService> _lazyCustomerService;
 
-    public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, ILogger logger)
+    public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
     {
-        _lazyCustomerService = new Lazy<ICustomerService>(() => new CustomerService(repositoryManager, mapper, logger));
+        _lazyCustomerService = new Lazy<ICustomerService>(() => new CustomerService(repositoryManager, mapper));
     }
 
     public ICustomerService CustomerService => _lazyCustomerService.Value;

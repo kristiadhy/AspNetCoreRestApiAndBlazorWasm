@@ -1,7 +1,7 @@
 ﻿//using Api.ServiceInstallers;
 //using Serilog;
 
-//namespace BionPro.Api.Service_Installers;
+//namespace Api.Service_Installers;
 
 //public class SerilogInstaller : IServiceInstallers
 //{

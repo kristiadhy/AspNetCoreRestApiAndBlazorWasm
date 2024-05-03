@@ -17,6 +17,18 @@ public static class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration, IHostBuilder host)
     {
+        //We use another approach to register the services. I Get it from Milan Jovanovic on his youtube channel : https://youtu.be/tKEF6xaeoig?si=o82cy17HOxpjDtAU 
+        services.InstallServices(configuration, host, typeof(IServiceInstallers).Assembly);
+
+        //Use the code below if you want to use configuration from appsettings.json
+        //Reference : Milan Jovanovic's youtube video about serilog : https://www.youtube.com/watch?v=nVAkSBpsuTk
+        host.UseSerilog((context, options) => options.ReadFrom.Configuration(context.Configuration));
+
+        //Configure service on another layers
+        services.ConfigureApplicationServices()
+            .ConfigureInfrastructureServices(configuration)
+            .ConfigureServiceServices();
+
         //Local function for patch
         NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
             new ServiceCollection()
@@ -40,21 +52,13 @@ public static class Startup
         services.AddEndpointsApiExplorer();
         services.AddHttpContextAccessor();
 
-        //Configure service on another layers
-        services.ConfigureApplicationServices()
-            .ConfigureServiceServices()
-            .ConfigureInfrastructureServices(configuration);
-
-        //We use another approach to register the services. I Get it from Milan Jovanovic on his youtube channel : https://youtu.be/tKEF6xaeoig?si=o82cy17HOxpjDtAU 
-        services.InstallServices(configuration, host, typeof(IServiceInstallers).Assembly);
-
-        //Use the code below if you want to use configuration from appsettings.json
-        host.UseSerilog((context, options) => options.ReadFrom.Configuration(context.Configuration));
-
         //See the explanation of this code below in this E-Book : ultimate in asp.Net Core web API by Code Maze, page 115 
         services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
+
         //Register global exception handling
         services.AddTransient<ExceptionHandlingMiddleware>();
+
+        services.AddAuthentication();
 
         return services;
     }
@@ -71,21 +75,18 @@ public static class Startup
         app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BionPro.Api v1"));
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CleanArchitecture.Api v1"));
 
         app.UseSerilogRequestLogging();
 
         app.UseHttpsRedirection();
 
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseCors("CorsPolicy");
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        
+        app.UseRouting();
 
         return app;
     }
