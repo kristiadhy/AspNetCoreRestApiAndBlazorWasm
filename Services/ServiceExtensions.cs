@@ -10,7 +10,7 @@ public static class ServiceExtensions
     public static IServiceCollection ConfigureServiceServices(this IServiceCollection services)
     {
         services.AddScoped<IServiceManager, ServiceManager>();
-        services.AddScoped<ICustomerService, CustomerService>();
+        //services.AddScoped<ICustomerService, CustomerService>();
 
         return services;
     }

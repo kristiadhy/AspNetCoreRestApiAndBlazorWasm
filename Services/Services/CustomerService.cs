@@ -14,15 +14,15 @@ internal sealed class CustomerService(IRepositoryManager repositoryManager, IMap
 {
     private readonly IRepositoryManager _repositoryManager = repositoryManager;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger<CustomerService> _logger;
+    //private readonly ILogger<CustomerService> _logger;
 
     public async Task<(IEnumerable<CustomerDTO> customerDTO, MetaData metaData)> GetByParameters(Guid customerID, CustomerParam customerParam, bool trackChanges, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation($"Get customer with ID : {customerID}");
+        //_logger.LogInformation($"Get customer with ID : {customerID}");
 
         var customers = await _repositoryManager.CustomerRepo.GetByParameters(customerParam, trackChanges);
         if (!customers.Any())
-            throw new CustomerIDNotFoundException(customerID);
+            throw new NoCustomerFoundException();
 
         var customersToReturn = _mapper.Map<IEnumerable<CustomerDTO>>(customers);
 

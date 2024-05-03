@@ -24,13 +24,16 @@ public static class Startup
         //Reference : Milan Jovanovic's youtube video about serilog : https://www.youtube.com/watch?v=nVAkSBpsuTk
         host.UseSerilog((context, options) => options.ReadFrom.Configuration(context.Configuration));
 
+        services.AddEndpointsApiExplorer();
+        services.AddHttpContextAccessor();
+
         //Configure service on another layers
-        services.ConfigureApplicationServices()
-            .ConfigureInfrastructureServices(configuration)
-            .ConfigureServiceServices();
+        services.ConfigureApplicationServices();
+        services.ConfigureInfrastructureServices(configuration);
+        services.ConfigureServiceServices();
 
         //Local function for patch
-        NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
+        NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter () =>
             new ServiceCollection()
             .AddLogging()
             .AddMvc()
@@ -41,16 +44,13 @@ public static class Startup
 
         services.AddScoped<ValidationFilterAttribute>();
 
-        //Register the controllers. It is the third layer of Clean Architecture
+        //Register the controllers.It is the third layer of Clean Architecture
         services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
             config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
         }).AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
-
-        services.AddEndpointsApiExplorer();
-        services.AddHttpContextAccessor();
 
         //See the explanation of this code below in this E-Book : ultimate in asp.Net Core web API by Code Maze, page 115 
         services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
@@ -85,8 +85,13 @@ public static class Startup
         app.UseAuthorization();
 
         app.UseCors("CorsPolicy");
-        
+
         app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
 
         return app;
     }

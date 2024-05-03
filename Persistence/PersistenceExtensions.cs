@@ -15,11 +15,9 @@ public static class PersistenceExtensions
     {
         services.AddDbContext<AppDBContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DBConnection"));
+            var connectionString = configuration.GetConnectionString("DBConnection");
+            options.UseSqlServer(connectionString);
         });
-
-        services.AddScoped<IUnitOfWorkRepo, UnitOfWorkRepo>();
-        services.AddScoped<ICustomerRepo, CustomerRepo>();
 
         services.AddScoped<IRepositoryManager, RepositoryManager>();
 
