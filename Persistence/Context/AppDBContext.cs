@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Configurations;
-using System.Reflection.Metadata;
 
 namespace Persistence.Context;
 
@@ -13,7 +12,7 @@ public class AppDBContext : IdentityDbContext<UserMD>
 
     }
 
-    public DbSet<CustomerMD> Customer { get; set; }
+    public DbSet<CustomerMD> Customers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,7 +21,5 @@ public class AppDBContext : IdentityDbContext<UserMD>
         //It will take all configurations from IEntityTypeConfiguration interface and run it.
         //Please refer to this link : https://learn.microsoft.com/en-us/ef/core/modeling/
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CustomerConfiguration).Assembly);
-
-        //new CustomerConfiguration().Configure(modelBuilder.Entity<CustomerMD>());
     }
 }
