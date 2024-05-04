@@ -52,9 +52,7 @@ internal sealed class CustomerService : ICustomerService
     {
         var customerMDForValidation = _mapper.Map<CustomerMD>(customerDto);
         var validator = new CustomerValidator();
-        var validationResult = validator.Validate(customerMDForValidation);
-        if (!validationResult.IsValid)
-            throw new ValidationException(validationResult);
+        validator.ValidateInput(customerMDForValidation);
 
         _logger.Information("Insert new customer : {customerName}", customerDto.CustomerName);
 
@@ -71,10 +69,7 @@ internal sealed class CustomerService : ICustomerService
     {
         var customerMDForValidation = _mapper.Map<CustomerMD>(customerDto);
         var validator = new CustomerValidator();
-        var validationResult = validator.Validate(customerMDForValidation);
-
-        if (!validationResult.IsValid)
-            throw new ValidationException(validationResult);
+        validator.ValidateInput(customerMDForValidation);
 
         _logger.Information("Update customer : {customerName}", customerDto.CustomerName);
 

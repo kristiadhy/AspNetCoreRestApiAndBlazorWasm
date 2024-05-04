@@ -33,7 +33,7 @@ public static class Startup
         services.ConfigureServiceServices();
 
         //Local function for patch
-        NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter () =>
+        NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
             new ServiceCollection()
             .AddLogging()
             .AddMvc()

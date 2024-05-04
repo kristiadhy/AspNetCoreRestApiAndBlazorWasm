@@ -1,4 +1,5 @@
 ﻿using Application.Exceptions;
+using Application.Validators;
 using System.Text.Json;
 
 namespace Api.Middleware
@@ -29,6 +30,7 @@ namespace Api.Middleware
 
             httpContext.Response.StatusCode = exception switch
             {
+                ValidationException => StatusCodes.Status400BadRequest,
                 BadRequestException => StatusCodes.Status400BadRequest,
                 NotFoundException => StatusCodes.Status404NotFound,
                 _ => StatusCodes.Status500InternalServerError

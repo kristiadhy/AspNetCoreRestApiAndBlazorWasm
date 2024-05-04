@@ -3,10 +3,11 @@ using Domain.DTO;
 using Domain.Entities;
 
 namespace Application.Mapping;
-internal class CustomerProfile : Profile
+internal class MappingProfile : Profile
 {
-    public CustomerProfile()
+    public MappingProfile()
     {
         CreateMap<CustomerMD, CustomerDTO>().ReverseMap();
+        CreateMap<UserRegistrationDTO, UserMD>();
     }
 }

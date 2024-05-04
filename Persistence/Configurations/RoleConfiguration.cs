@@ -9,10 +9,10 @@ internal class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
     {
         builder.HasData(
             new IdentityRole
-        {
-            Name = "Manager",
-            NormalizedName = "MANAGER"
-        },
+            {
+                Name = "Manager",
+                NormalizedName = "MANAGER"
+            },
         new IdentityRole
         {
             Name = "Administrator",

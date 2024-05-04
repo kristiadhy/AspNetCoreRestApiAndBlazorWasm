@@ -11,11 +11,14 @@ public class IdentityInstaller : IServiceInstallers
     {
         var builder = services.AddIdentity<UserMD, IdentityRole>(o =>
         {
+            //Set rule for password
             o.Password.RequireDigit = true;
             o.Password.RequireLowercase = false;
             o.Password.RequireUppercase = false;
             o.Password.RequireNonAlphanumeric = false;
             o.Password.RequiredLength = 10;
+
+            //Set rule for user
             o.User.RequireUniqueEmail = true;
 
         }).AddEntityFrameworkStores<AppDBContext>()

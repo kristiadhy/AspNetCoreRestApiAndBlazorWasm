@@ -16,7 +16,8 @@ public class CustomerController(IServiceManager serviceManager) : ControllerBase
 {
     private readonly IServiceManager _serviceManager = serviceManager;
 
-    [HttpGet(Name = "Customers"), AllowAnonymous]
+    [HttpGet(Name = "Customers")]
+    [Authorize]
     public async Task<IActionResult> GetByParameters(Guid customerID, [FromQuery] CustomerParam customerParam, CancellationToken cancellationToken)
     {
         var pagedResult = await _serviceManager.CustomerService.GetByParameters(customerID, customerParam, false, cancellationToken);

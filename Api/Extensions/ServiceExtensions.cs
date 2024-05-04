@@ -1,5 +1,4 @@
 ﻿using Api.ServiceInstallers;
-using Serilog;
 using System.Reflection;
 
 namespace Presentation.Api;

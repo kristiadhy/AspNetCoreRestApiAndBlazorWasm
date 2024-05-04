@@ -29,10 +29,17 @@ public class CustomerValidator : AbstractValidator<CustomerMD>
            ;
     }
 
-    //Check from database
+    //Example of how to check uniqueness of email in the database
     private static async Task<bool> IsUniqueAsync(string? email)
     {
         await Task.Delay(300);
         return email?.ToLower() != "mail@my.com";
+    }
+
+    public void ValidateInput(CustomerMD customerMD)
+    {
+        var validationResult = Validate(customerMD);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult);
     }
 }
