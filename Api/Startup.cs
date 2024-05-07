@@ -81,16 +81,19 @@ public static class Startup
 
         app.UseHttpsRedirection();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-
         app.UseCors("CorsPolicy");
 
         app.UseRouting();
 
+        //Authentication and Authorization should be placed here between app.UseRouting() and  app.UseEndpoints()
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapControllers();
+            //By using .RequireAuthorization() we don't need to put [Authorize] on every controller, it's implemented by default.
+            //If you want to allow controller to be access publicly, you can set [AllowAnonymous] on controller.
+            endpoints.MapControllers().RequireAuthorization();
         });
 
         return app;

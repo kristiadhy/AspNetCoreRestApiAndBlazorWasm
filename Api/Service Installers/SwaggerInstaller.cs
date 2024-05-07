@@ -15,6 +15,7 @@ public class SwaggerInstaller : IServiceInstallers
                 Version = "v1"
             });
 
+            //Here we set the swagger to use bearer token authorization
             var jwtSecurityScheme = new OpenApiSecurityScheme()
             {
                 In = ParameterLocation.Header,
@@ -24,9 +25,7 @@ public class SwaggerInstaller : IServiceInstallers
                 BearerFormat = "JWT",
                 Scheme = "Bearer"
             };
-
             options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
-
             options.AddSecurityRequirement(new OpenApiSecurityRequirement()
             {
                 {
@@ -34,9 +33,10 @@ public class SwaggerInstaller : IServiceInstallers
                     {
                     Reference = new OpenApiReference
                         {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
                         }
+
                     },
                     new List<string>()
                 }

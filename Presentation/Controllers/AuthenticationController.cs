@@ -27,17 +27,27 @@ public class AuthenticationController(IServiceManager serviceManager) : Controll
             return BadRequest(ModelState);
         }
 
+        //If there is no error, then new user and its role is created sucessfully.
         return Created();
     }
 
     [HttpPost("login"), AllowAnonymous]
-    [ServiceFilter(typeof(ValidationFilterAttribute))] 
-    public async Task<IActionResult> Authenticate([FromBody] UserAuthenticationDTO user) 
-    { 
-        if (!await _serviceManager.AuthenticationService.ValidateUser(user)) 
-            return Unauthorized(); 
-        return Ok(new { 
-            Token = await _serviceManager.AuthenticationService.CreateToken() 
-        }); 
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> Authenticate([FromBody] UserAuthenticationDTO user)
+    {
+        if (!await _serviceManager.AuthenticationService.ValidateUser(user))
+            return Unauthorized();
+
+        //Create a JWT token after a successfull login
+        var tokenDTO = await _serviceManager.AuthenticationService.CreateToken(populateExp: true);
+        return Ok(tokenDTO);
+    }
+
+    [HttpPost("refresh")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> Refresh([FromBody] TokenDTO tokenDto)
+    {
+        var tokenDtoToReturn = await _serviceManager.AuthenticationService.RefreshToken(tokenDto);
+        return Ok(tokenDtoToReturn);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Domain.DTO;
 using Domain.Parameters;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
@@ -17,7 +16,6 @@ public class CustomerController(IServiceManager serviceManager) : ControllerBase
     private readonly IServiceManager _serviceManager = serviceManager;
 
     [HttpGet(Name = "Customers")]
-    [Authorize]
     public async Task<IActionResult> GetByParameters(Guid customerID, [FromQuery] CustomerParam customerParam, CancellationToken cancellationToken)
     {
         var pagedResult = await _serviceManager.CustomerService.GetByParameters(customerID, customerParam, false, cancellationToken);

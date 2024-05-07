@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Context;
 
@@ -11,9 +12,11 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240507083901_AddRefreshToken")]
+    partial class AddRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,13 +194,13 @@ namespace Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1945a044-45bd-4df1-b757-56027eddfab0",
+                            Id = "d500aea1-bce9-448a-9ac0-55711383a9d4",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "2513c880-ecae-4932-a78a-15219898769d",
+                            Id = "1a941f8c-07bf-4b91-a664-5ec477ff1e22",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
