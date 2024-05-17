@@ -28,8 +28,8 @@ internal sealed class CustomerService : ICustomerService
         _logger.Information($"Get customers");
 
         var customers = await _repositoryManager.CustomerRepo.GetByParameters(customerParam, trackChanges);
-        if (!customers.Any())
-            throw new NoCustomerFoundException();
+        //if (!customers.Any())
+        //    throw new NoCustomerFoundException();
 
         var customersToReturn = _mapper.Map<IEnumerable<CustomerDTO>>(customers);
 
