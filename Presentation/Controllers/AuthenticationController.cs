@@ -41,9 +41,10 @@ public class AuthenticationController(IServiceManager serviceManager) : Controll
         //Create a JWT token after a successfull login
         var tokenDTO = await _serviceManager.AuthenticationService.CreateToken(populateExp: true);
         return Ok(tokenDTO);
+
     }
 
-    [HttpPost("refresh")]
+    [HttpPost("refresh"), AllowAnonymous]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Refresh([FromBody] TokenDTO tokenDto)
     {

@@ -21,7 +21,7 @@ public class CustomerValidator : AbstractValidator<CustomerMD>
            .NotEmpty()
            .MaximumLength(100)
            .EmailAddress()
-           .MustAsync(async (email, _) => await IsUniqueAsync(email))
+           //.MustAsync(async (email, _) => await IsUniqueAsync(email))
            ;
 
         RuleFor(customer => customer.ContactPerson)

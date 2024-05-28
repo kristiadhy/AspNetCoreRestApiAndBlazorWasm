@@ -4,7 +4,7 @@ namespace Domain;
 
 public abstract class BaseEntity
 {
-    public DateTimeOffset DateCreated { get; set; } = DateTime.Now;
+    public DateTimeOffset? DateCreated { get; set; }
     [MaxLength(50)]
     public string CreatedBy { get; set; } = string.Empty;
     public DateTimeOffset? DateUpdated { get; set; }

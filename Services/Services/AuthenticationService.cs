@@ -98,6 +98,7 @@ public class AuthenticationService : IAuthenticationService
         var secretKey = Environment.GetEnvironmentVariable("SECRET");
         var key = Encoding.UTF8.GetBytes(secretKey!);
         var secret = new SymmetricSecurityKey(key);
+
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
@@ -137,7 +138,7 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
-    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string AccessToken)
     {
         //GetPrincipalFromExpiredToken is used to get the user principal from the expired access token.
         //We make use of the ValidateToken method from the JwtSecurityTokenHandler class for this purpose
@@ -148,14 +149,14 @@ public class AuthenticationService : IAuthenticationService
             ValidateIssuer = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET")!)),
-            ValidateLifetime = true,
+            ValidateLifetime = false,
             ValidIssuer = _jwtConfiguration.ValidIssuer,
             ValidAudience = _jwtConfiguration.ValidAudience
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
         SecurityToken securityToken;
-        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+        var principal = tokenHandler.ValidateToken(AccessToken, tokenValidationParameters, out securityToken);
         var jwtSecurityToken = securityToken as JwtSecurityToken;
         if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
         {
