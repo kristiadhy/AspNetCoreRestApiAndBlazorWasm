@@ -1,0 +1,24 @@
+﻿@page "/"
+@inject NotificationService NotificationService
+
+<PageTitle>@($"{GlobalVariable.AppName} | Dashboard")</PageTitle>
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="4px">
+    <RadzenButton Click=@(args => OnClick("Primary button with text and icon")) Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Text="Delete All" Icon="delete" ButtonStyle="ButtonStyle.Danger" />
+</RadzenStack>
+
+@code {
+    private void OnClick(string text)
+    {
+        NotificationService.Notify(
+            new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Info,
+                    Duration = 3000,
+                    Summary = "Saved Successfully",
+                    Detail = "A new customer added"
+            }
+    );
+    }
+}

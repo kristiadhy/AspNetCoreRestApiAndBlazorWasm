@@ -58,6 +58,8 @@ public static class Startup
         //Register global exception handling
         services.AddTransient<ExceptionHandlingMiddleware>();
 
+        host.UseDefaultServiceProvider(sp => sp.ValidateOnBuild = true);
+
         //We use AddAuthentication() in Jwt installer service
         //services.AddAuthentication();
 

@@ -1,0 +1,27 @@
+﻿<RadzenStack Orientation="Orientation.Horizontal"
+             JustifyContent="JustifyContent.Left"
+             Gap="1rem"
+             Class="rz-mt-8 rz-mb-4">
+
+    <RadzenButton ButtonType="ButtonType.Submit"
+                  Size="ButtonSize.Medium"
+                  Icon="save"
+                  Text="Save" 
+                  BusyText="Saving ..." 
+                  IsBusy=@IsBusy />
+
+    <RadzenButton ButtonStyle="ButtonStyle.Light"
+                  Variant="Variant.Flat"
+                  Size="ButtonSize.Medium"
+                  Icon="clear"
+                  Text="Reset Field"
+                  Click="@OnButtonClear" />
+</RadzenStack>
+
+@code{
+    [Parameter]
+    public EventCallback OnButtonClear { get; set; }
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+}

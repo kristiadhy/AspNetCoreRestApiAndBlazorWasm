@@ -1,0 +1,28 @@
+﻿@*  
+IMPORTANT : In .NET 7 or earlier, wrap a <CascadingAuthenticationState> around some part of the UI tree, for example around the Blazor router. In .NET 8 or later, don't use the CascadingAuthenticationState component.
+*@
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
+            <Authorizing>
+                <RadzenText Text="System is authorizing" />
+            </Authorizing>
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        @*         <FocusOnNavigate RouteData="@routeData" Selector="h1" /> *@
+    </Found>
+    <NotFound>
+        <PageTitle>Page Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <RadzenAlert AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter">
+                Page not found
+            </RadzenAlert>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+    Router? router;
+}

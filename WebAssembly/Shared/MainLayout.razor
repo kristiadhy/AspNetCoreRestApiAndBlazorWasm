@@ -1,0 +1,71 @@
+﻿@inherits LayoutComponentBase
+
+<AuthorizeView>
+    <Authorized>
+        <RadzenLayout>
+            <RadzenHeader>
+                <RadzenStack Orientation="Orientation.Horizontal"
+                             AlignItems="AlignItems.Center"
+                             Gap="2"
+                             class="d-flex">
+                    <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                    <RadzenLabel Text="BionPro" class="fw-bold" />
+                    <AuthLink />
+                </RadzenStack>
+            </RadzenHeader>
+
+            <RadzenSidebar @bind-Expanded="@sidebarExpanded">
+                <RadzenPanelMenu Multiple="true">
+                    <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" IconColor="@iconColor" Path="/" />
+                    <RadzenPanelMenuItem Text="Master" Icon="wysiwyg" IconColor="@iconColor" Expanded="true">
+                        <RadzenPanelMenuItem Text="Customer" Icon="people_alt" Path="customer" />
+                        <RadzenPanelMenuItem Text="Supplier" Icon="people_outline" Path="supplier" />
+                        <RadzenPanelMenuItem Text="Product" Icon="inventory" Path="weather" />
+                    </RadzenPanelMenuItem>
+                    <RadzenPanelMenuItem Text="Purchase" Icon="shopping_cart" IconColor="@iconColor" Path="counter" />
+                    <RadzenPanelMenuItem Text="Sale" Icon="shopping_bag" IconColor="@iconColor" />
+                    <RadzenPanelMenuItem Text="Inventory" Icon="storefront" IconColor="@iconColor" />
+                </RadzenPanelMenu>
+                @*<div class="rz-p-4">
+                Sidebar
+                </div> *@
+            </RadzenSidebar>
+
+            <RadzenBody>
+                <div class="rz-p-4">
+                    <ErrorBoundary @ref="errorBoundary">
+                        <ChildContent>
+                            @Body
+                        </ChildContent>
+                        <ErrorContent Context="errorContext">
+                            <RadzenAlert AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter">
+                                @errorContext.Message
+                            </RadzenAlert>
+                        </ErrorContent>
+                    </ErrorBoundary>
+                </div>
+            </RadzenBody>
+
+            <RadzenFooter>
+                Footer
+            </RadzenFooter>
+        </RadzenLayout>
+    </Authorized>
+
+    <NotAuthorized>
+        @Body
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
+<RadzenComponents />
+
+@code {
+    bool sidebarExpanded = true;
+    string iconColor = string.Empty;
+
+    ErrorBoundary? errorBoundary;
+
+    protected override void OnParametersSet() => errorBoundary?.Recover();
+}

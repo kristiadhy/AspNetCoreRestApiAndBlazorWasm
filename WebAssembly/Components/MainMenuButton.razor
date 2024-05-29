@@ -1,0 +1,41 @@
+﻿<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="4px">
+    <RadzenButton Variant="_buttonVariant2"
+                  Click=@(args => LoadData())
+                  Text="Load Data"
+                  Icon="refresh"
+                  ButtonStyle="ButtonStyle.Primary"
+                  Size="ButtonSize.Medium" />
+
+    <RadzenButton Variant="_buttonVariant1"
+                  Click=@(args => CreateNew())
+                  Text="Add New"
+                  Icon="add_circle_outline"
+                  ButtonStyle="ButtonStyle.Primary"
+                  Size="ButtonSize.Medium" />
+
+@*     <RadzenButton Variant="_buttonVariant1"
+                  Text="Multiple Delete"
+                  Icon="delete"
+                  ButtonStyle="ButtonStyle.Danger"
+                  Size="ButtonSize.Medium"
+                  Disabled="true" /> *@
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public EventCallback LoadDataClicked { get; set; }
+    [Parameter]
+    public EventCallback CreateNewClicked { get; set; }
+    Variant _buttonVariant1 = Variant.Outlined;
+    Variant _buttonVariant2 = Variant.Filled;
+
+    private async Task LoadData()
+    {
+        await LoadDataClicked.InvokeAsync();
+    }
+
+    private async Task CreateNew()
+    {
+        await CreateNewClicked.InvokeAsync();
+    }
+}

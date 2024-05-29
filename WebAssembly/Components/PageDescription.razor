@@ -1,0 +1,17 @@
+﻿@if (CheckParameterExist == false)
+{
+    <RadzenText TextStyle="TextStyle.Body1">Create new @DescTitle</RadzenText>
+}
+else
+{
+    <RadzenText TextStyle="TextStyle.Body1">Edit existing @DescTitle : <strong>@DescContent</strong></RadzenText>
+}
+
+@code {
+    [Parameter]
+    public bool CheckParameterExist { get; set; } = false;
+    [Parameter]
+    public string DescTitle { get; set; } = string.Empty;
+    [Parameter]
+    public string DescContent { get; set; } = string.Empty;
+}

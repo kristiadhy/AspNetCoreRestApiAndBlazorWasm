@@ -1,0 +1,63 @@
+﻿@page "/customer"
+
+<PageTitle>@($"{GlobalVariable.AppName} | Customer")</PageTitle>
+
+@* <RadzenText TextStyle="TextStyle.H4">Customer</RadzenText> *@
+@* <RadzenText TextStyle="TextStyle.Body1">Your customer list</RadzenText> *@
+
+<div class="rz-mb-6">
+    <RadzenBreadCrumb>
+        <RadzenBreadCrumbItem Path="/customer"
+                              Text="Customer" />
+        <RadzenBreadCrumbItem Text="List" />
+    </RadzenBreadCrumb>
+</div>
+
+<MainMenuButton LoadDataClicked="EvLoadData"
+                CreateNewClicked="EvCreateNew" />
+
+<RadzenStack>
+    <RadzenButton Text="Reset" Click="@Reset" Style="margin-bottom: 20px;" />
+    <RadzenDataGrid @ref="customerGrid"
+                    IsLoading=@isLoading
+                    Count="@count"
+                    Data="@CustomerList"
+                    AllowSorting="true"
+                    AllowFiltering="true"
+                    AllowPaging="true"
+                    PageSize="4"
+                    PagerHorizontalAlign="HorizontalAlign.Center"
+                    ColumnWidth="200px">
+        <Columns>
+            <RadzenDataGridColumn Property="CustomerID"
+                                  Visible=false
+                                  Filterable="false"
+                                  Title="ID"
+                                  Frozen="true"
+                                  Width="80px"
+                                  TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn Property="Name"
+                                  Title="Name"
+                                  Frozen="true"
+                                  Width="160px" />
+            <RadzenDataGridColumn Property="PhoneNumber"
+                                  Title="Phone Number"
+                                  Width="160px" />
+            <RadzenDataGridColumn Property="Address"
+                                  Title="Address"
+                                  Width="200px" />
+            <RadzenDataGridColumn Property="Email"
+                                  Title="Email"
+                                  Width="160px" />
+            <RadzenDataGridColumn Property="ContactPerson"
+                                  Title="Contact Person"
+                                  Width="160px" />
+            <RadzenDataGridColumn Property="CPPhone"
+                                  Title="CP Phone"
+                                  Width="200px" />
+            <RadzenDataGridColumn Property="Note"
+                                  Title="Note"
+                                  Width="320px" />
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>

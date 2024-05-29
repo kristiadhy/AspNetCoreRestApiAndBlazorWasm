@@ -1,0 +1,16 @@
+﻿@using System.Security.Claims
+
+<AuthorizeView>
+    <Authorized>
+@*         The user: @context.User.FindFirst(ClaimTypes.Name).Value is authorized *@
+        <RadzenButton Variant="Variant.Text"
+                      Text="Logout"
+                      Icon="logout"
+                      Size="ButtonSize.Small"
+                      Click=@(args => Logout())
+                      class="text-white ms-auto" />
+    </Authorized>
+    <NotAuthorized>
+        <RadzenText Text="Hi, i am not authorized" class="text-white ms-auto rz-px-5" />
+    </NotAuthorized>
+</AuthorizeView>

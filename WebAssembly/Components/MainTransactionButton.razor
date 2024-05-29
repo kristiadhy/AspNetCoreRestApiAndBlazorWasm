@@ -1,0 +1,14 @@
+﻿<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="4px">
+    <RadzenButton Variant="_buttonVariant"
+                  Click=@(async args => { await OnButtonBackClicked.InvokeAsync(); })
+                  Icon="keyboard_return"
+                  Text="Return"
+                  ButtonStyle="ButtonStyle.Primary"
+                  Size="ButtonSize.Medium" />
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public EventCallback OnButtonBackClicked { get; set; }
+    Variant _buttonVariant = Variant.Outlined;
+}

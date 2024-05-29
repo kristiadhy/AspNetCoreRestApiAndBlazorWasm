@@ -1,0 +1,47 @@
+﻿@page "/login"
+@attribute [AllowAnonymous]
+
+<AuthorizeView>
+    <Authorized>
+
+    </Authorized>
+    <NotAuthorized>
+        <RadzenRow Gap="2rem"
+                   Class="rz-my-12 rz-mx-auto rz-border-radius-6 rz-shadow-10"
+                   Style="width: 95%; max-width: 800px; overflow: hidden;">
+
+            <RadzenColumn Size="12"
+                          SizeMD="6">
+                <RadzenCard Class="rz-shadow-0 rz-border-radius-0 rz-text-align-center rz-p-12" Style="height: 100%; background: var(--rz-primary-light)">
+                    <RadzenText TextStyle="TextStyle.DisplayH3" TagName="TagName.H2" Class="rz-color-white rz-mb-6">Welcome!</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H6" Class="rz-color-white">Join the world's largest community!</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body2" Class="rz-color-white">Let's get started with your <strong>30 days</strong> trial.</RadzenText>
+                </RadzenCard>
+            </RadzenColumn>
+
+            <RadzenColumn Size="12"
+                          SizeMD="6">
+                <RadzenCard Class="rz-shadow-0 rz-border-radius-0 rz-p-12">
+                    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="rz-mb-6">
+                        Login
+                    </RadzenText>
+                    <RadzenTemplateForm Context="LoginContext"
+                                        Data=@("SimpleLogin")>
+                        <RadzenLogin AllowRegister="true"
+                                     AllowResetPassword="false"
+                                     Login=@OnLogin
+                                     ResetPassword=@OnResetPassword
+                                     Register=@OnRegister />
+                    </RadzenTemplateForm>
+                    <RadzenAlert AlertStyle="AlertStyle.Danger"
+                                 Variant="Variant.Flat"
+                                 Shade="Shade.Lighter"
+                                 @bind-Visible="AlertVisible">
+                        @ErrorMessage
+                    </RadzenAlert>
+                </RadzenCard>
+            </RadzenColumn>
+
+        </RadzenRow>
+    </NotAuthorized>
+</AuthorizeView>
