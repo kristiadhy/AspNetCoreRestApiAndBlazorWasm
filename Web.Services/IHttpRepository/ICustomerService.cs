@@ -6,8 +6,9 @@ namespace Services.IRepositories;
 
 public interface ICustomerService
 {
-    public Task<PagingResponse<CustomerDTO>> Read(CustomerParam customerParameter);
-    public Task<HttpResponseMessage> Create(CustomerDTO Lst);
-    public Task<HttpResponseMessage> Update(CustomerDTO Cls);
-    public Task<HttpResponseMessage> Delete(List<CustomerDTO> Lst);
+    public Task<PagingResponse<CustomerDTO>> GetCustomers(CustomerParam customerParameter);
+    public Task<CustomerDTO> GetCustomerByID(Guid customerID);
+    public Task<HttpResponseMessage> Create(CustomerDTO customerDTO);
+    public Task<HttpResponseMessage> Update(CustomerDTO customerDTO);
+    public Task<HttpResponseMessage> Delete(List<CustomerDTO> customerDTO);
 }

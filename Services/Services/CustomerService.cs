@@ -36,7 +36,7 @@ internal sealed class CustomerService : ICustomerService
         return (customersToReturn, customers.MetaData);
     }
 
-    public async Task<IEnumerable<CustomerDTO>> GetByCustomerID(Guid customerID, bool trackChanges, CancellationToken cancellationToken = default)
+    public async Task<CustomerDTO> GetByCustomerID(Guid customerID, bool trackChanges, CancellationToken cancellationToken = default)
     {
         _logger.Information($"Get customer with ID : {customerID}");
 
@@ -44,7 +44,7 @@ internal sealed class CustomerService : ICustomerService
         if (customer is null)
             throw new CustomerIDNotFoundException(customerID);
 
-        var customersToReturn = _mapper.Map<IEnumerable<CustomerDTO>>(customer);
+        var customersToReturn = _mapper.Map<CustomerDTO>(customer);
         return customersToReturn;
     }
 
@@ -60,9 +60,9 @@ internal sealed class CustomerService : ICustomerService
         _repositoryManager.CustomerRepo.CreateEntity(customerMD, trackChanges, cancellationToken);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
 
-        var customerDTO_ToReturn = _mapper.Map<CustomerDTO>(customerMD);
+        var customerToReturn = _mapper.Map<CustomerDTO>(customerMD);
 
-        return customerDTO_ToReturn;
+        return customerToReturn;
     }
 
     public async Task Update(CustomerDTO customerDto, bool trackChanges, CancellationToken cancellationToken = default)
@@ -73,8 +73,8 @@ internal sealed class CustomerService : ICustomerService
 
         _logger.Information("Update customer : {customerName}", customerDto.CustomerName);
 
-        _mapper.Map<CustomerMD>(customerDto);
-        //_repositoryManager.CustomerRepo.UpdateEntity(customerMD, trackChanges, cancellationToken);
+        CustomerMD customerToUpdate = _mapper.Map<CustomerMD>(customerDto);
+        _repositoryManager.CustomerRepo.UpdateEntity(customerToUpdate, trackChanges, cancellationToken);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
     }
 

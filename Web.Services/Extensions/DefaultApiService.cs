@@ -34,8 +34,7 @@ public class DefaultApiService
     {
         HttpResponseMessage response = await HttpClient.GetAsync(uriRequest);
         var content = await response.Content.ReadAsStringAsync();
-        if (CheckStatusResponse(response))
-            return content;
+        CheckStatusResponse(response);
 
         return content!;
     }
@@ -51,7 +50,7 @@ public class DefaultApiService
 
         HttpResponseMessage response = await HttpClient.GetAsync(uriRequest);
         var content = await response.Content.ReadAsStringAsync();
-        if (CheckStatusResponse(response))
+        if (!CheckStatusResponse(response))
             return [];
 
         var result = JsonConvert.DeserializeObject<IEnumerable<T1>>(content, options);
@@ -64,6 +63,13 @@ public class DefaultApiService
     public async Task<HttpResponseMessage> PostAsync<T>(string uriRequest, T bodyContent)
     {
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(uriRequest, bodyContent);
+        CheckStatusResponse(response);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> PutAsync<T>(string uriRequest, T bodyContent)
+    {
+        HttpResponseMessage response = await HttpClient.PutAsJsonAsync(uriRequest, bodyContent);
         CheckStatusResponse(response);
         return response;
     }

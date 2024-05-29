@@ -1,6 +1,6 @@
-﻿using WebAssembly.Services;
-using Radzen;
+﻿using Radzen;
 using Services;
+using WebAssembly.Extensions;
 
 namespace Extensions;
 
@@ -10,13 +10,13 @@ public static class Startup
     {
         //Register HTTP service project
         services.ConfigureHTTPServices();
-        //Register Radzen to the services
+
         services.AddRadzenComponents();
-        //Register the local service
-        services.AddScoped<CustomModalService>();
-        services.AddScoped<CustomNotificationService>();
         services.AddCascadingAuthenticationState();
-        services.AddAuthorizationCore();
+
+        //Register the local services
+        services.ConfigureCustomComponentServices();
+        services.ConfigureStateManagementServices();
 
         return services;
     }

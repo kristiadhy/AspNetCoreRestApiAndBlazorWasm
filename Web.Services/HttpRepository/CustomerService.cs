@@ -19,18 +19,7 @@ public class CustomerService : ICustomerService
         _options = options;
     }
 
-    public async Task<HttpResponseMessage> Create(CustomerDTO customerDTO)
-    {
-        var postResult = await _client.PostAsync(controllerName, customerDTO);
-        return postResult;
-    }
-
-    public Task<HttpResponseMessage> Delete(List<CustomerDTO> Lst)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<PagingResponse<CustomerDTO>> Read(CustomerParam customerParameter)
+    public async Task<PagingResponse<CustomerDTO>> GetCustomers(CustomerParam customerParameter)
     {
         var queryStringParam = new Dictionary<string, string>
         {
@@ -38,6 +27,7 @@ public class CustomerService : ICustomerService
             ["searchTerm"] = customerParameter.srcByName == null ? "" : customerParameter.srcByName,
             ["orderBy"] = customerParameter.OrderBy!
         };
+
         var queryHelper = QueryHelpers.AddQueryString(controllerName, queryStringParam!);
         HttpResponseMessage response = await _client.GetResponseAsync(queryHelper);
         var content = await response.Content.ReadAsStringAsync();
@@ -52,7 +42,29 @@ public class CustomerService : ICustomerService
         return pagingResponse;
     }
 
-    public Task<HttpResponseMessage> Update(CustomerDTO Cls)
+    public async Task<CustomerDTO> GetCustomerByID(Guid customerID)
+    {
+        var content = await _client.GetResponseAndContentAsync($"{controllerName}/{customerID}");
+        var result = JsonConvert.DeserializeObject<CustomerDTO>(content, _options);
+        if (!string.IsNullOrEmpty(content))
+            return result!;
+        else
+            return new();
+    }
+
+    public async Task<HttpResponseMessage> Create(CustomerDTO customerDTO)
+    {
+        var postResult = await _client.PostAsync(controllerName, customerDTO);
+        return postResult;
+    }
+
+    public async Task<HttpResponseMessage> Update(CustomerDTO customerDTO)
+    {
+        var postResult = await _client.PutAsync(controllerName, customerDTO);
+        return postResult;
+    }
+
+    public Task<HttpResponseMessage> Delete(List<CustomerDTO> customerDTO)
     {
         throw new NotImplementedException();
     }

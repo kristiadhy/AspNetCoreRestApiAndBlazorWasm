@@ -24,7 +24,7 @@ public class AuthStateProvider : AuthenticationStateProvider
     {
         //Get token from local storage
         var token = await _localStorage.GetItemAsync<string>("authToken");
-        //string? token = null;
+
         if (string.IsNullOrWhiteSpace(token))
             return _anonymous;
 

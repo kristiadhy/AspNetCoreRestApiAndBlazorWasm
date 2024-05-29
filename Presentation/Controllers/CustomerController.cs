@@ -44,7 +44,7 @@ public class CustomerController(IServiceManager serviceManager) : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Update([FromBody] CustomerDTO customerDTO, CancellationToken cancellationToken)
     {
-        await _serviceManager.CustomerService.Update(customerDTO, false, cancellationToken);
+        await _serviceManager.CustomerService.Update(customerDTO, true, cancellationToken);
         return NoContent();
     }
 

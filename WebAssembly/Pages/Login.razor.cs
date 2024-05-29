@@ -21,7 +21,7 @@ public partial class Login
         {
             TokenDTO tokenResponse = await ServiceManager.AuthService.Login(userDTO);
         }
-        catch (Exception ex)
+        catch
         {
             AlertVisible = true;
             ErrorMessage = "Wrong username/password";

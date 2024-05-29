@@ -1,41 +1,68 @@
-﻿using Microsoft.AspNetCore.Components;
-using Radzen.Blazor;
-using Domain.DTO;
-using WebAssembly.Services;
-using Services.IRepositories;
+﻿using Domain.DTO;
 using Domain.Parameters;
+using Microsoft.AspNetCore.Components;
+using Radzen;
+using Radzen.Blazor;
+using Services.IRepositories;
+using WebAssembly.Services;
+using WebAssembly.StateManagement;
 
 namespace WebAssembly.Pages;
 
 public partial class CustomerL
 {
     [Inject]
-    NavigationManager NavigationHelper { get; set; } = default!;
+    NavigationManager NavigationManager { get; set; } = default!;
     [Inject]
     CustomNotificationService NotificationService { get; set; } = default!;
     [Inject]
     IServiceManager ServiceManager { get; set; } = default!;
+    [Inject]
+    CustomerState CustomerState { get; set; } = default!;
 
-    protected RadzenDataGrid<CustomerDTO> customerGrid = default!;
-    protected int count;
-    public List<CustomerDTO> CustomerList { get; set; } = default!;
+    internal static RadzenDataGrid<CustomerDTO> CustomerGrid { get; set; } = default!;
+    protected int TotalCount;
     public MetaData MetaData { get; set; } = default!;
 
-    protected CustomerParam customerParameter = default!;
+    protected CustomerParam customerParameter = new();
     protected bool isLoading = false;
     protected IEnumerable<string> selectedTitles = default!;
+    protected int PageSize = 1;
 
-    protected async Task EvLoadData()
+    protected override void OnInitialized()
+    {
+        ServiceManager.InterceptorService.RegisterEvent();
+    }
+
+    protected async Task EvReloadData()
+    {
+        await CustomerGrid.Reload();
+    }
+
+    protected async Task EvLoadData(LoadDataArgs args)
     {
         isLoading = true;
 
         await Task.Yield();
 
-        var pagingResponse = await ServiceManager.CustomerService.Read(customerParameter);
-        CustomerList = pagingResponse.Items;
+        var pagingResponse = await ServiceManager.CustomerService.GetCustomers(customerParameter);
+
+        CustomerState.CustomerList = pagingResponse.Items;
         MetaData = pagingResponse.MetaData;
+        PageSize = MetaData.PageSize;
+        TotalCount = MetaData.TotalCount;
 
         isLoading = false;
+    }
+
+    protected void EvEditRow(CustomerDTO customer)
+    {
+        NavigationManager.NavigateTo($"customer/edit/{customer.CustomerID}");
+    }
+
+    protected void EvDeleteRow(CustomerDTO customer)
+    {
+
     }
 
     protected async Task OnSelectedTitlesChange(object value)
@@ -43,17 +70,16 @@ public partial class CustomerL
         if (selectedTitles != null && !selectedTitles.Any())
             selectedTitles = null;
 
-        await customerGrid.FirstPage();
-    }
-
-    protected async Task Reset()
-    {
-        customerGrid.Reset(true);
-        await customerGrid.FirstPage(true);
+        await CustomerGrid.FirstPage();
     }
 
     protected void EvCreateNew()
     {
-        NavigationHelper.NavigateTo($"customer/create");
+        NavigationManager.NavigateTo($"customer/create");
+    }
+
+    public void Dispose()
+    {
+        ServiceManager.InterceptorService.DisposeEvent();
     }
 }
