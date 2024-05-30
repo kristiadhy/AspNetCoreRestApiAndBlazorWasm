@@ -11,7 +11,7 @@ public class CustomerService : ICustomerService
 {
     private readonly DefaultApiService _client;
     private readonly JsonSerializerSettings _options;
-    private readonly string controllerName = "customers";
+    private readonly string additionalResourceName = "customers";
 
     public CustomerService(DefaultApiService client, JsonSerializerSettings options)
     {
@@ -28,7 +28,7 @@ public class CustomerService : ICustomerService
             ["orderBy"] = customerParameter.OrderBy!
         };
 
-        var queryHelper = QueryHelpers.AddQueryString(controllerName, queryStringParam!);
+        var queryHelper = QueryHelpers.AddQueryString(additionalResourceName, queryStringParam!);
         HttpResponseMessage response = await _client.GetResponseAsync(queryHelper);
         var content = await response.Content.ReadAsStringAsync();
         _client.CheckStatusResponse(response);
@@ -44,7 +44,7 @@ public class CustomerService : ICustomerService
 
     public async Task<CustomerDTO> GetCustomerByID(Guid customerID)
     {
-        var content = await _client.GetResponseAndContentAsync($"{controllerName}/{customerID}");
+        var content = await _client.GetResponseAndContentAsync($"{additionalResourceName}/{customerID}");
         var result = JsonConvert.DeserializeObject<CustomerDTO>(content, _options);
         if (!string.IsNullOrEmpty(content))
             return result!;
@@ -54,18 +54,25 @@ public class CustomerService : ICustomerService
 
     public async Task<HttpResponseMessage> Create(CustomerDTO customerDTO)
     {
-        var postResult = await _client.PostAsync(controllerName, customerDTO);
-        return postResult;
+        var response = await _client.PostAsync(additionalResourceName, customerDTO);
+        var content = await response.Content.ReadAsStringAsync();
+        _client.CheckErrorResponse(response, content, _options);
+        return response;
     }
 
     public async Task<HttpResponseMessage> Update(CustomerDTO customerDTO)
     {
-        var postResult = await _client.PutAsync(controllerName, customerDTO);
-        return postResult;
+        var response = await _client.PutAsync(additionalResourceName, customerDTO);
+        var content = await response.Content.ReadAsStringAsync();
+        _client.CheckErrorResponse(response, content, _options);
+        return response;
     }
 
-    public Task<HttpResponseMessage> Delete(List<CustomerDTO> customerDTO)
+    public async Task<HttpResponseMessage> Delete(Guid customerID)
     {
-        throw new NotImplementedException();
+        var response = await _client.DeleteAsync($"{additionalResourceName}/{customerID}");
+        var content = await response.Content.ReadAsStringAsync();
+        _client.CheckErrorResponse(response, content, _options);
+        return response;
     }
 }

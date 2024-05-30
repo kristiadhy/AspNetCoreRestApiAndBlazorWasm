@@ -2,60 +2,55 @@
 using Domain.DTO;
 using Extension.Services;
 using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json;
 using Services.Extensions;
 using Services.IRepositories;
-using System.Text.Json;
 
 namespace Services.Repositories;
 
 public class AuthenticationService : IAuthenticationService
 {
     private readonly DefaultApiService _client;
-    private readonly JsonSerializerOptions _options;
+    private readonly JsonSerializerSettings _options;
     private readonly AuthenticationStateProvider _authStateProvider;
     private readonly ILocalStorageService _localStorage;
 
-    public AuthenticationService(DefaultApiService client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
+    public AuthenticationService(DefaultApiService client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, JsonSerializerSettings options)
     {
         _client = client;
-        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        _options = options;
         _authStateProvider = authStateProvider;
         _localStorage = localStorage;
     }
 
     public async Task<string> GetCurrentTokenFromLocalStorage()
     {
-        var token = await _localStorage.GetItemAsync<string>("authToken");
-        if (token is not null)
-            return token;
+        var accessToken = await _localStorage.GetItemAsync<string>("authToken");
+        if (accessToken is not null)
+            return accessToken;
         else
             return string.Empty;
     }
 
-    public async Task<RegistrationResponseDto> RegisterUser(UserRegistrationDTO userForRegistration)
+    public async Task<ResponseDto> RegisterUser(UserRegistrationDTO userForRegistration)
     {
-        var registrationResult = await _client.PostAsync("authentication/registration", userForRegistration);
-        var registrationContent = await registrationResult.Content.ReadAsStringAsync();
+        var response = await _client.PostAsync("authentication/registration", userForRegistration);
+        var content = await response.Content.ReadAsStringAsync();
+        _client.CheckErrorResponse(response, content, _options);
 
-        if (!registrationResult.IsSuccessStatusCode)
-        {
-            var result = JsonSerializer.Deserialize<RegistrationResponseDto>(registrationContent, _options);
-            return result;
-        }
-
-        return new RegistrationResponseDto { IsSuccessfulRegistration = true };
+        return new ResponseDto { IsSuccess = true };
     }
 
     public async Task<TokenDTO> Login(UserAuthenticationDTO userForAuthentication)
     {
-        var authResult = await _client.PostAsync("authentication/login", userForAuthentication);
-        var authContent = await authResult.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<TokenDTO>(authContent, _options);
+        var response = await _client.PostAsync("authentication/login", userForAuthentication);
+        var content = await response.Content.ReadAsStringAsync();
 
-        if (!authResult.IsSuccessStatusCode)
-            return result;
+        _client.CheckErrorResponse(response, content, _options);
 
-        await _localStorage.SetItemAsync("authToken", result.AccessToken);
+        var result = JsonConvert.DeserializeObject<TokenDTO>(content, _options);
+
+        await _localStorage.SetItemAsync("authToken", result!.AccessToken);
         await _localStorage.SetItemAsync("refreshToken", result.RefreshToken);
         ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.AccessToken);
 
@@ -72,24 +67,24 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<string> RefreshToken()
     {
-        var AccessToken = await _localStorage.GetItemAsync<string>("authToken");
+        var accessToken = await _localStorage.GetItemAsync<string>("authToken");
         var refreshToken = await _localStorage.GetItemAsync<string>("refreshToken");
 
-        if (string.IsNullOrEmpty(AccessToken) || string.IsNullOrEmpty(refreshToken))
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
             return string.Empty;
 
-        //var tokenDto = JsonSerializer.Serialize(new TokenDTO(AccessToken, refreshToken));
-        var tokenDto = new TokenDTO(AccessToken, refreshToken);
+        var tokenDto = new TokenDTO(accessToken, refreshToken);
 
-        var refreshResult = await _client.PostAsync("authentication/refresh", tokenDto);
-        var refreshContent = await refreshResult.Content.ReadAsStringAsync();
+        var response = await _client.PostAsync("authentication/refresh", tokenDto);
+        var content = await response.Content.ReadAsStringAsync();
 
-        var result = JsonSerializer.Deserialize<TokenDTO>(refreshContent, _options);
+        _client.CheckErrorResponse(response, content, _options);
+        if (content is null)
+            throw new ApplicationException("Something wrong with the refresh token API response");
 
-        if (!refreshResult.IsSuccessStatusCode)
-            throw new ApplicationException("Something went wrong during the refresh token action");
+        var result = JsonConvert.DeserializeObject<TokenDTO>(content, _options);
 
-        await _localStorage.SetItemAsync("authToken", result.AccessToken);
+        await _localStorage.SetItemAsync("authToken", result!.AccessToken);
         await _localStorage.SetItemAsync("refreshToken", result.RefreshToken);
 
         return result.AccessToken;

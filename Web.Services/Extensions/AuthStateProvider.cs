@@ -23,12 +23,13 @@ public class AuthStateProvider : AuthenticationStateProvider
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         //Get token from local storage
-        var token = await _localStorage.GetItemAsync<string>("authToken");
+        var accessToken = await _localStorage.GetItemAsync<string>("authToken");
 
-        if (string.IsNullOrWhiteSpace(token))
+        if (string.IsNullOrWhiteSpace(accessToken))
             return _anonymous;
 
-        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(token), "jwtAuthType")));
+        var claimsFromAccessToken = JwtParser.ParseClaimsFromJwt(accessToken);
+        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claimsFromAccessToken, "jwtAuthType")));
     }
 
     public void NotifyUserAuthentication(string token)

@@ -10,5 +10,5 @@ public interface ICustomerService
     public Task<CustomerDTO> GetCustomerByID(Guid customerID);
     public Task<HttpResponseMessage> Create(CustomerDTO customerDTO);
     public Task<HttpResponseMessage> Update(CustomerDTO customerDTO);
-    public Task<HttpResponseMessage> Delete(List<CustomerDTO> customerDTO);
+    public Task<HttpResponseMessage> Delete(Guid customerID);
 }

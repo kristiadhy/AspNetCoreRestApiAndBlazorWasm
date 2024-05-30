@@ -6,7 +6,7 @@ public static class StateManagementServices
 {
     public static IServiceCollection ConfigureStateManagementServices(this IServiceCollection services)
     {
-        services.AddSingleton<CustomerState>();
+        services.AddScoped<CustomerState>();
 
         return services;
     }

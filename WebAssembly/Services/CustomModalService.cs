@@ -11,9 +11,9 @@ public class CustomModalService
         DialogService = dialogService;
     }
 
-    public async Task<bool> SavingConfirmation()
+    public async Task<bool> SavingConfirmation(string transactionName)
     {
-        bool? confirmationStatus = await DialogService.Confirm("Do you want to save this transaction?", "Saving Transaction", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        bool? confirmationStatus = await DialogService.Confirm($"Do you want to save this transaction?", $"Save {transactionName}", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
         if (confirmationStatus is not null)
             if ((bool)confirmationStatus)
                 return true;
@@ -21,9 +21,9 @@ public class CustomModalService
         return false;
     }
 
-    public async Task<bool> DeleteConfirmation()
+    public async Task<bool> DeleteConfirmation(string transactionName, string entityName)
     {
-        bool? confirmationStatus = await DialogService.Confirm("Do you want to delete this transaction?", "Deleting Transaction", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        bool? confirmationStatus = await DialogService.Confirm($"{entityName} will be deleted. Are you sure want to do this?", $"Delete {transactionName}", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
         if (confirmationStatus is not null)
             if ((bool)confirmationStatus)
                 return true;

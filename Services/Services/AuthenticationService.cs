@@ -90,6 +90,7 @@ public class AuthenticationService : IAuthenticationService
             throw new RefreshTokenBadRequest();
 
         _user = user;
+
         return await CreateToken(populateExp: false);
     }
 

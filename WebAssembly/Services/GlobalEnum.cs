@@ -2,7 +2,7 @@
 
 public class GlobalEnum
 {
-    public enum FormStatus 
+    public enum FormStatus
     {
         New,
         Edit

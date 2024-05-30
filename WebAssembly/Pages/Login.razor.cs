@@ -19,7 +19,7 @@ public partial class Login
         UserAuthenticationDTO userDTO = new(args.Username, args.Password);
         try
         {
-            TokenDTO tokenResponse = await ServiceManager.AuthService.Login(userDTO);
+            var tokenResponse = await ServiceManager.AuthService.Login(userDTO);
         }
         catch
         {

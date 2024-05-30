@@ -20,11 +20,15 @@ public class HttpInterceptorService
     {
         var absPath = e.Request.RequestUri!.AbsolutePath;
 
-        //We need to check the token lifetime every time we call a service to the web API. Uri path that contains "authentication" means that we call the authentication API service (Register, Login, and RefreshToken). Hence, we don't need to insert a token in the HTTP client header.
+        //IMPORTANT : How refresh token work.
+        //1. We must include the JWT token bearer every time we make a call to the web API service; The token should be active, it means we can't use an expired token.
+        //2. TryRefreshToken() is checking whether the token is expired or not (We know it because we save the expiry time in the JWT token)
+        //3. When the token is nearly expired, then extend the expiration time (In this method, we extend token expiry time when the expiration time remaining is < 5 minutes).
+
         if (!absPath.Contains("authentication"))
         {
-            var tokenUse = await _refreshTokenService.RefreshTokenOrUseExistingToken();
-            e.Request.Headers.Authorization = new AuthenticationHeaderValue("bearer", tokenUse);
+            var accessToken = await _refreshTokenService.TryRefreshToken();
+            e.Request.Headers.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
         }
     }
 

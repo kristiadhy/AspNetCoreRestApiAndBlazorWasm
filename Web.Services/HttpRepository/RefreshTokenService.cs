@@ -15,7 +15,7 @@ public class RefreshTokenService
         _authService = authService;
     }
 
-    public async Task<string> RefreshTokenOrUseExistingToken()
+    public async Task<string> TryRefreshToken()
     {
         var authState = await _authStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -27,11 +27,9 @@ public class RefreshTokenService
                 var timeUTC = DateTime.UtcNow;
                 var diff = expTime - timeUTC;
                 if (diff.TotalMinutes <= 5)
-                    return await _authService.RefreshToken();
-                else
-                    return await _authService.GetCurrentTokenFromLocalStorage();
+                    await _authService.RefreshToken();
             }
 
-        return string.Empty;
+        return await _authService.GetCurrentTokenFromLocalStorage();
     }
 }

@@ -22,4 +22,16 @@ public class CustomNotificationService
                Detail = detailText
            });
     }
+
+    public void DeleteNotification(string detailText)
+    {
+        NotificationService.Notify(
+           new NotificationMessage
+           {
+               Severity = NotificationSeverity.Success,
+               Duration = 3000,
+               Summary = "Deleted Successfully",
+               Detail = detailText
+           });
+    }
 }

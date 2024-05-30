@@ -17,9 +17,9 @@ public sealed class ServiceManager : IServiceManager
     public ServiceManager(DefaultApiService apiService, JsonSerializerSettings settings, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, HttpClientInterceptor httpClientInterceptor)
     {
         _lazyCustomerService = new Lazy<ICustomerService>(() => new CustomerService(apiService, settings));
-        _lazyAuthService = new Lazy<IAuthenticationService>(() => new AuthenticationService(apiService, authStateProvider, localStorage));
-        _lazyRefreshTokenService = new Lazy<RefreshTokenService>(() => new RefreshTokenService(authStateProvider, _lazyAuthService.Value));
-        _lazyInterceptorService = new Lazy<HttpInterceptorService>(() => new HttpInterceptorService(httpClientInterceptor, _lazyRefreshTokenService.Value));
+        _lazyAuthService = new Lazy<IAuthenticationService>(() => new AuthenticationService(apiService, authStateProvider, localStorage, settings));
+        _lazyRefreshTokenService = new Lazy<RefreshTokenService>(() => new RefreshTokenService(authStateProvider, AuthService));
+        _lazyInterceptorService = new Lazy<HttpInterceptorService>(() => new HttpInterceptorService(httpClientInterceptor, RefreshTokenService));
     }
 
     public ICustomerService CustomerService => _lazyCustomerService.Value;

@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Domain.DTO;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Net;
@@ -63,30 +64,24 @@ public class DefaultApiService
     public async Task<HttpResponseMessage> PostAsync<T>(string uriRequest, T bodyContent)
     {
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(uriRequest, bodyContent);
-        CheckStatusResponse(response);
         return response;
     }
 
     public async Task<HttpResponseMessage> PutAsync<T>(string uriRequest, T bodyContent)
     {
         HttpResponseMessage response = await HttpClient.PutAsJsonAsync(uriRequest, bodyContent);
-        CheckStatusResponse(response);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> DeleteAsync(string additionalResourceName)
+    {
+        HttpResponseMessage response = await HttpClient.DeleteAsync(additionalResourceName);
         return response;
     }
 
     public void RemoveAuthorizationHeader()
     {
         HttpClient.DefaultRequestHeaders.Authorization = null;
-    }
-
-    private async Task<string> GetJWTFromLocalStorage()
-    {
-        //Get token from local storage
-        var token = await _localStorage.GetItemAsync<string>("authToken");
-        if (string.IsNullOrWhiteSpace(token))
-            return string.Empty;
-        else
-            return token!;
     }
 
     public bool CheckStatusResponse(HttpResponseMessage response)
@@ -98,10 +93,19 @@ public class DefaultApiService
                 return false;
 
             //response.EnsureSuccessStatusCode();
-            //string? content = await response.Content.ReadAsStringAsync();
-            throw new ApplicationException(response.ReasonPhrase);
+            throw new ApplicationException($"{response.ReasonPhrase}");
         }
 
         return true;
+    }
+
+    public void CheckErrorResponse(HttpResponseMessage response, string content, JsonSerializerSettings options)
+    {
+        if (!response.IsSuccessStatusCode)
+        {
+            //If there is an error in the server, the server's middleware will return ResponseDto
+            var serviceResponse = JsonConvert.DeserializeObject<ResponseDto>(content, options);
+            throw new ApplicationException($"{response.ReasonPhrase} - {serviceResponse?.Error}");
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Validators;
+using Domain.DTO;
 using System.Text.Json;
 
 namespace Api.Middleware
@@ -36,9 +37,10 @@ namespace Api.Middleware
                 _ => StatusCodes.Status500InternalServerError
             };
 
-            var response = new
+            var response = new ResponseDto
             {
-                error = exception.Message
+                IsSuccess = false,
+                Error = exception.Message
             };
 
             await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));

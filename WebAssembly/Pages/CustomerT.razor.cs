@@ -7,7 +7,7 @@ using WebAssembly.StateManagement;
 
 namespace WebAssembly.Pages;
 
-public partial class CustomerT : IDisposable
+public partial class CustomerT
 {
     [Inject]
     NavigationManager NavigationManager { get; set; } = default!;
@@ -28,9 +28,9 @@ public partial class CustomerT : IDisposable
     protected bool IsSaving = false;
     protected CustomerParam CustomerParameter = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        ServiceManager.InterceptorService.RegisterEvent();
+        //Should put this code in the parameter set because we need to register the interceptor service first when this razor page is first initialized.
 
         if (ParamCustomerID is not null)
         {
@@ -55,40 +55,37 @@ public partial class CustomerT : IDisposable
 
     public async Task SubmitAsync(CustomerDTO customer)
     {
-        bool confirmationStatus = await ConfirmationModalService.SavingConfirmation();
-        if (confirmationStatus)
+        bool confirmationStatus = await ConfirmationModalService.SavingConfirmation("Customer");
+        if (!confirmationStatus)
+            return;
+
+        IsSaving = true;
+        StateHasChanged();
+
+        if (FormStatus == GlobalEnum.FormStatus.New)
         {
-            IsSaving = true;
-            StateHasChanged();
-
-            if (FormStatus == GlobalEnum.FormStatus.New)
-            {
-                customer.CustomerID = null;
-                var response = await ServiceManager.CustomerService.Create(customer);
-                if (response.IsSuccessStatusCode)
-                    NotificationService.SaveNotification("A new customer added");
-            }
-            else if (FormStatus == GlobalEnum.FormStatus.Edit)
-            {
-                var response = await ServiceManager.CustomerService.Update(customer);
-                if (response.IsSuccessStatusCode)
-                {
-                    NotificationService.SaveNotification("Customer updated");
-                    await CustomerL.CustomerGrid.Reload();
-                }
-            }
-
-            IsSaving = false;
+            customer.CustomerID = null;
+            var response = await ServiceManager.CustomerService.Create(customer);
+            if (response.IsSuccessStatusCode)
+                NotificationService.SaveNotification("A new customer added");
         }
+        else if (FormStatus == GlobalEnum.FormStatus.Edit)
+        {
+            var response = await ServiceManager.CustomerService.Update(customer);
+            if (response.IsSuccessStatusCode)
+            {
+                NotificationService.SaveNotification("Customer updated");
+            }
+        }
+
+        //Load customer state after making changes
+        await CustomerState.LoadCustomers();
+
+        IsSaving = false;
     }
 
     public void ClearField()
     {
         Console.WriteLine("Clear fields");
-    }
-
-    public void Dispose()
-    {
-        ServiceManager.InterceptorService.DisposeEvent();
     }
 }
