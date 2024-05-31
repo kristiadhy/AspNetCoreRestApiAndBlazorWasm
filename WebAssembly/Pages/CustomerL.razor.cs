@@ -23,14 +23,6 @@ public partial class CustomerL
     internal static RadzenDataGrid<CustomerDTO> CustomerGrid { get; set; } = default!;
 
     protected bool isLoading = false;
-    //IList<CustomerDTO>? selectedRow;
-
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    await base.OnInitializedAsync();
-
-    //    selectedRow = CustomerState.CustomerList.Take(1).ToList();
-    //}
 
     protected async Task EvReloadData()
     {
