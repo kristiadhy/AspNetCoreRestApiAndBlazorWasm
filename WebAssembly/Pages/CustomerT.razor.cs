@@ -30,8 +30,6 @@ public partial class CustomerT
 
     protected override async Task OnParametersSetAsync()
     {
-        //Should put this code in the parameter set because we need to register the interceptor service first when this razor page is first initialized.
-
         if (ParamCustomerID is not null)
         {
             CustomerState.Customer = await ServiceManager.CustomerService.GetCustomerByID((Guid)ParamCustomerID);
