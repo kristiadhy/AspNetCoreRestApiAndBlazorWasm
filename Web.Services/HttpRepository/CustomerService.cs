@@ -31,7 +31,7 @@ public class CustomerService : ICustomerService
         var queryHelper = QueryHelpers.AddQueryString(additionalResourceName, queryStringParam!);
         HttpResponseMessage response = await _client.GetResponseAsync(queryHelper);
         var content = await response.Content.ReadAsStringAsync();
-        _client.CheckStatusResponse(response);
+        _client.CheckErrorResponseForGetMethod(response);
 
         var pagingResponse = new PagingResponse<CustomerDTO>()
         {
@@ -56,7 +56,7 @@ public class CustomerService : ICustomerService
     {
         var response = await _client.PostAsync(additionalResourceName, customerDTO);
         var content = await response.Content.ReadAsStringAsync();
-        _client.CheckErrorResponse(response, content, _options);
+        _client.CheckErrorResponseForPostMethod(response, content, _options);
         return response;
     }
 
@@ -64,7 +64,7 @@ public class CustomerService : ICustomerService
     {
         var response = await _client.PutAsync(additionalResourceName, customerDTO);
         var content = await response.Content.ReadAsStringAsync();
-        _client.CheckErrorResponse(response, content, _options);
+        _client.CheckErrorResponseForPostMethod(response, content, _options);
         return response;
     }
 
@@ -72,7 +72,7 @@ public class CustomerService : ICustomerService
     {
         var response = await _client.DeleteAsync($"{additionalResourceName}/{customerID}");
         var content = await response.Content.ReadAsStringAsync();
-        _client.CheckErrorResponse(response, content, _options);
+        _client.CheckErrorResponseForPostMethod(response, content, _options);
         return response;
     }
 }

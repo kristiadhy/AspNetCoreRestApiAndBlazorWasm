@@ -13,6 +13,9 @@ public class DefaultApiService
     //IMPORTANT : Here is the logic of how we use the httpclient service
     //1. We register httpclient as class/service and set all of the configuration here in the constructor.
 
+    //IMPORTANT : We don't need to add JWT header in the http client request as it is already handled by Interceptor Service
+    //Please look into HttpInterceptorService class
+
     private readonly HttpClient HttpClient;
     private readonly ILocalStorageService _localStorage;
     private readonly WebHostEnvironment _hostEnvironment;
@@ -38,23 +41,16 @@ public class DefaultApiService
     {
         HttpResponseMessage response = await HttpClient.GetAsync(uriRequest);
         var content = await response.Content.ReadAsStringAsync();
-        CheckStatusResponse(response);
+        CheckErrorResponseForGetMethod(response);
 
         return content!;
     }
 
     public async Task<IEnumerable<T1>> GetAsync<T1>(JsonSerializerSettings options, string uriRequest)
     {
-        //IMPORTANT : We don't need to add JWT header in the http client request as it is already handled by Interceptor Service
-        //Please look into HttpInterceptorService class
-
-        //string jwtToken = await GetJWTFromLocalStorage();
-        //if (!string.IsNullOrEmpty(jwtToken))
-        //    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-
         HttpResponseMessage response = await HttpClient.GetAsync(uriRequest);
         var content = await response.Content.ReadAsStringAsync();
-        if (!CheckStatusResponse(response))
+        if (!CheckErrorResponseForGetMethod(response))
             return [];
 
         var result = JsonConvert.DeserializeObject<IEnumerable<T1>>(content, options);
@@ -87,7 +83,7 @@ public class DefaultApiService
         HttpClient.DefaultRequestHeaders.Authorization = null;
     }
 
-    public bool CheckStatusResponse(HttpResponseMessage response)
+    public bool CheckErrorResponseForGetMethod(HttpResponseMessage response)
     {
         if (!response.IsSuccessStatusCode)
         {
@@ -102,7 +98,7 @@ public class DefaultApiService
         return true;
     }
 
-    public void CheckErrorResponse(HttpResponseMessage response, string content, JsonSerializerSettings options)
+    public void CheckErrorResponseForPostMethod(HttpResponseMessage response, string content, JsonSerializerSettings options)
     {
         if (!response.IsSuccessStatusCode)
         {

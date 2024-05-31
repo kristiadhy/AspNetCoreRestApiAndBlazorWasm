@@ -36,7 +36,7 @@ public class AuthenticationService : IAuthenticationService
     {
         var response = await _client.PostAsync("authentication/registration", userForRegistration);
         var content = await response.Content.ReadAsStringAsync();
-        _client.CheckErrorResponse(response, content, _options);
+        _client.CheckErrorResponseForPostMethod(response, content, _options);
 
         return new ResponseDto { IsSuccess = true };
     }
@@ -46,7 +46,7 @@ public class AuthenticationService : IAuthenticationService
         var response = await _client.PostAsync("authentication/login", userForAuthentication);
         var content = await response.Content.ReadAsStringAsync();
 
-        _client.CheckErrorResponse(response, content, _options);
+        _client.CheckErrorResponseForPostMethod(response, content, _options);
 
         var result = JsonConvert.DeserializeObject<TokenDTO>(content, _options);
 
@@ -78,7 +78,7 @@ public class AuthenticationService : IAuthenticationService
         var response = await _client.PostAsync("authentication/refresh", tokenDto);
         var content = await response.Content.ReadAsStringAsync();
 
-        _client.CheckErrorResponse(response, content, _options);
+        _client.CheckErrorResponseForPostMethod(response, content, _options);
         if (content is null)
             throw new ApplicationException("Something wrong with the refresh token API response");
 
