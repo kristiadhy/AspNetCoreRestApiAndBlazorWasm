@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using Web.Services.Features;
 
 namespace Services.Extensions;
 public class DefaultApiService
@@ -14,8 +15,9 @@ public class DefaultApiService
 
     private readonly HttpClient HttpClient;
     private readonly ILocalStorageService _localStorage;
+    private readonly WebHostEnvironment _hostEnvironment;
 
-    public DefaultApiService(HttpClient httpClient, ILocalStorageService localStorage, IServiceProvider sp)
+    public DefaultApiService(HttpClient httpClient, ILocalStorageService localStorage, IServiceProvider sp, WebHostEnvironment hostEnvironment)
     {
         HttpClient = httpClient;
         HttpClient.BaseAddress = new Uri("https://localhost:7229/api/");
@@ -23,6 +25,7 @@ public class DefaultApiService
         HttpClient.EnableIntercept(sp);
 
         _localStorage = localStorage;
+        _hostEnvironment = hostEnvironment;
     }
 
     public async Task<HttpResponseMessage> GetResponseAsync(string uriRequest)
@@ -105,7 +108,12 @@ public class DefaultApiService
         {
             //If there is an error in the server, the server's middleware will return ResponseDto
             var serviceResponse = JsonConvert.DeserializeObject<ResponseDto>(content, options);
-            throw new ApplicationException($"{response.ReasonPhrase} - {serviceResponse?.Error}");
+            //Show error detail if host environment mode is "Development"
+            string errorResponse = $"{response.ReasonPhrase}";
+            if (_hostEnvironment.IsDevelopment)
+                errorResponse += $" - {serviceResponse?.Error}";
+
+            throw new ApplicationException($"{errorResponse}");
         }
     }
 }
