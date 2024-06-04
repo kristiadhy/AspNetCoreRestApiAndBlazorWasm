@@ -23,11 +23,11 @@ internal sealed class CustomerService : ICustomerService
         _logger = logger;
     }
 
-    public async Task<(IEnumerable<CustomerDTO> customerDTO, MetaData metaData)> GetByParameters(Guid customerID, CustomerParam customerParam, bool trackChanges, CancellationToken cancellationToken = default)
+    public async Task<(IEnumerable<CustomerDTO> customerDTO, MetaData metaData)> GetByParametersAsync(Guid customerID, CustomerParam customerParam, bool trackChanges, CancellationToken cancellationToken = default)
     {
         _logger.Information($"Get customers");
 
-        var customers = await _repositoryManager.CustomerRepo.GetByParameters(customerParam, trackChanges);
+        var customers = await _repositoryManager.CustomerRepo.GetByParametersAsync(customerParam, trackChanges);
         //if (!customers.Any())
         //    throw new NoCustomerFoundException();
 
@@ -36,11 +36,11 @@ internal sealed class CustomerService : ICustomerService
         return (customersToReturn, customers.MetaData);
     }
 
-    public async Task<CustomerDTO> GetByCustomerID(Guid customerID, bool trackChanges, CancellationToken cancellationToken = default)
+    public async Task<CustomerDTO> GetByCustomerIDAsync(Guid customerID, bool trackChanges, CancellationToken cancellationToken = default)
     {
         _logger.Information($"Get customer with ID : {customerID}");
 
-        var customer = await _repositoryManager.CustomerRepo.GetByID(customerID, trackChanges);
+        var customer = await _repositoryManager.CustomerRepo.GetByIDAsync(customerID, trackChanges);
         if (customer is null)
             throw new CustomerIDNotFoundException(customerID);
 
@@ -48,7 +48,7 @@ internal sealed class CustomerService : ICustomerService
         return customersToReturn;
     }
 
-    public async Task<CustomerDTO> Create(CustomerDTO customerDto, bool trackChanges, CancellationToken cancellationToken = default)
+    public async Task<CustomerDTO> CreateAsync(CustomerDTO customerDto, bool trackChanges, CancellationToken cancellationToken = default)
     {
         var customerMDForValidation = _mapper.Map<CustomerMD>(customerDto);
         var validator = new CustomerValidator();
@@ -65,7 +65,7 @@ internal sealed class CustomerService : ICustomerService
         return customerToReturn;
     }
 
-    public async Task Update(CustomerDTO customerDto, bool trackChanges, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(CustomerDTO customerDto, bool trackChanges, CancellationToken cancellationToken = default)
     {
         var customerMDForValidation = _mapper.Map<CustomerMD>(customerDto);
         var validator = new CustomerValidator();
@@ -78,7 +78,7 @@ internal sealed class CustomerService : ICustomerService
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task Delete(Guid customerID, bool trackChanges, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Guid customerID, bool trackChanges, CancellationToken cancellationToken = default)
     {
         //var lstCustomerMD = ServiceExtensions<CustomerMD, CustomerDTO, CustomerQP>.AddEntityListfromQP(QP);
         //var lstCustomerMD = DataProcessingExtension.Create_ListOfModel_FromListOfDTO<CustomerMD, CustomerDTO>(lstCustomerDTOs, _mapper);
@@ -86,7 +86,7 @@ internal sealed class CustomerService : ICustomerService
         //foreach (var row in lstCustomerDTOs)
         //    _logger.LogInformation("Delete customer : {customerName}", row.CustomerName);
 
-        var customerForDelete = await _repositoryManager.CustomerRepo.GetByID(customerID, trackChanges);
+        var customerForDelete = await _repositoryManager.CustomerRepo.GetByIDAsync(customerID, trackChanges);
         if (customerForDelete is null)
             throw new CustomerIDNotFoundException(customerID);
 
@@ -96,9 +96,9 @@ internal sealed class CustomerService : ICustomerService
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<(CustomerDTO customerToPatch, CustomerMD customer)> GetCustomerForPatch(Guid customerID, bool empTrackChanges, CancellationToken cancellationToken = default)
+    public async Task<(CustomerDTO customerToPatch, CustomerMD customer)> GetCustomerForPatchAsync(Guid customerID, bool empTrackChanges, CancellationToken cancellationToken = default)
     {
-        var customer = await _repositoryManager.CustomerRepo.GetByID(customerID, empTrackChanges);
+        var customer = await _repositoryManager.CustomerRepo.GetByIDAsync(customerID, empTrackChanges);
         if (customer is null)
             throw new CustomerIDNotFoundException(customerID);
 
@@ -107,7 +107,7 @@ internal sealed class CustomerService : ICustomerService
         return (customerToPatch, customer);
     }
 
-    public async Task SaveChangesForPatch(CustomerDTO customerToPatch, CustomerMD customer, CancellationToken cancellationToken = default)
+    public async Task SaveChangesForPatchAsync(CustomerDTO customerToPatch, CustomerMD customer, CancellationToken cancellationToken = default)
     {
         _mapper.Map(customerToPatch, customer);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);

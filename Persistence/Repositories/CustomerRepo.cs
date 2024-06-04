@@ -11,7 +11,7 @@ public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
 {
     public CustomerRepo(AppDBContext dbContext) : base(dbContext) { }
 
-    public async Task<PagedList<CustomerMD>> GetAll(CustomerParam customerParam, bool trackChanges)
+    public async Task<PagedList<CustomerMD>> GetAllAsync(CustomerParam customerParam, bool trackChanges)
     {
         var customers = await FindAll(trackChanges)
             .Sort(customerParam.OrderBy) //It's a local method
@@ -24,7 +24,7 @@ public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
         return new PagedList<CustomerMD>(customers, count, customerParam.PageNumber, customerParam.PageSize);
     }
 
-    public async Task<PagedList<CustomerMD>> GetByParameters(CustomerParam customerParam, bool trackChanges)
+    public async Task<PagedList<CustomerMD>> GetByParametersAsync(CustomerParam customerParam, bool trackChanges)
     {
         var customers = await FindAll(trackChanges)
             .SearchByName(customerParam.srcByName) //It's a local method
@@ -40,7 +40,7 @@ public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
         return new PagedList<CustomerMD>(customers, count, customerParam.PageNumber, customerParam.PageSize);
     }
 
-    public async Task<CustomerMD?> GetByID(Guid customerID, bool trackChanges)
+    public async Task<CustomerMD?> GetByIDAsync(Guid customerID, bool trackChanges)
     {
         var customer = await FindByCondition(x => x.CustomerID == customerID, trackChanges).FirstOrDefaultAsync();
         if (customer is not null)
