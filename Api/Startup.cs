@@ -83,8 +83,6 @@ public static class Startup
         //Use global exception handling middleware
         app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-        //app.UseSwaggerUI(config => config.SwaggerEndpoint("/swagger/v1/swagger.json", "CleanArchitecture.Api v1"));
-
         app.UseSerilogRequestLogging();
 
         app.UseHttpsRedirection();
