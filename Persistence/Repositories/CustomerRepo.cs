@@ -49,18 +49,18 @@ public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
             return null;
     }
 
-    public void CreateEntity(CustomerMD entity, bool trackChanges, CancellationToken cancellationToken = default)
+    public void CreateEntity(CustomerMD entity, bool trackChanges)
     {
-        Create(entity, cancellationToken);
+        Create(entity);
     }
 
-    public void UpdateEntity(CustomerMD entity, bool trackChanges, CancellationToken cancellationToken = default)
+    public void UpdateEntity(CustomerMD entity, bool trackChanges)
     {
-        Update(entity, cancellationToken);
+        Update(entity);
     }
 
-    public void DeleteEntity(CustomerMD entity, bool trackChanges, CancellationToken cancellationToken = default)
+    public void DeleteEntity(CustomerMD entity, bool trackChanges)
     {
-        Delete(entity, cancellationToken);
+        Delete(entity);
     }
 }

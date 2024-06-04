@@ -57,7 +57,7 @@ internal sealed class CustomerService : ICustomerService
         _logger.Information("Insert new customer : {customerName}", customerDto.CustomerName);
 
         var customerMD = _mapper.Map<CustomerMD>(customerDto);
-        _repositoryManager.CustomerRepo.CreateEntity(customerMD, trackChanges, cancellationToken);
+        _repositoryManager.CustomerRepo.CreateEntity(customerMD, trackChanges);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
 
         var customerToReturn = _mapper.Map<CustomerDTO>(customerMD);
@@ -74,7 +74,7 @@ internal sealed class CustomerService : ICustomerService
         _logger.Information("Update customer : {customerName}", customerDto.CustomerName);
 
         CustomerMD customerToUpdate = _mapper.Map<CustomerMD>(customerDto);
-        _repositoryManager.CustomerRepo.UpdateEntity(customerToUpdate, trackChanges, cancellationToken);
+        _repositoryManager.CustomerRepo.UpdateEntity(customerToUpdate, trackChanges);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
     }
 
@@ -92,7 +92,7 @@ internal sealed class CustomerService : ICustomerService
 
         _logger.Information("Delete customer : {customerName}", customerForDelete.CustomerName);
 
-        _repositoryManager.CustomerRepo.DeleteEntity(customerForDelete, trackChanges, cancellationToken);
+        _repositoryManager.CustomerRepo.DeleteEntity(customerForDelete, trackChanges);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
     }
 
