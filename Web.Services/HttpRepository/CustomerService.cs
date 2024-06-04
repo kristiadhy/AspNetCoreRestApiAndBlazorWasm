@@ -9,11 +9,11 @@ using Services.IRepositories;
 namespace Services.Repositories;
 public class CustomerService : ICustomerService
 {
-    private readonly DefaultApiService _client;
+    private readonly CustomHttpClient _client;
     private readonly JsonSerializerSettings _options;
     private readonly string additionalResourceName = "customers";
 
-    public CustomerService(DefaultApiService client, JsonSerializerSettings options)
+    public CustomerService(CustomHttpClient client, JsonSerializerSettings options)
     {
         _client = client;
         _options = options;

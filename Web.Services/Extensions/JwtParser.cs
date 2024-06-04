@@ -41,13 +41,13 @@ public static class JwtParser
 
     private static void ExtractRolesFromJWT(List<Claim> claims, Dictionary<string, object> keyValuePairs)
     {
-        keyValuePairs.TryGetValue(ClaimTypes.Role, out object roles);
+        keyValuePairs.TryGetValue(ClaimTypes.Role, out object? roles);
 
         if (roles != null)
         {
-            var parsedRoles = roles.ToString().Trim().TrimStart('[').TrimEnd(']').Split(',');
+            var parsedRoles = roles?.ToString()?.Trim().TrimStart('[').TrimEnd(']').Split(',');
 
-            if (parsedRoles.Length > 1)
+            if (parsedRoles?.Length > 1)
             {
                 foreach (var parsedRole in parsedRoles)
                 {
@@ -56,7 +56,7 @@ public static class JwtParser
             }
             else
             {
-                claims.Add(new Claim(ClaimTypes.Role, parsedRoles[0]));
+                claims.Add(new Claim(ClaimTypes.Role, parsedRoles?[0]!));
             }
 
             keyValuePairs.Remove(ClaimTypes.Role);

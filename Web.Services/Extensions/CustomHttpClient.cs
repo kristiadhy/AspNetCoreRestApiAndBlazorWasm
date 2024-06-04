@@ -8,7 +8,7 @@ using Toolbelt.Blazor.Extensions.DependencyInjection;
 using Web.Services.Features;
 
 namespace Services.Extensions;
-public class DefaultApiService
+public class CustomHttpClient
 {
     //IMPORTANT : Here is the logic of how we use the httpclient service
     //1. We register httpclient as class/service and set all of the configuration here in the constructor.
@@ -20,10 +20,11 @@ public class DefaultApiService
     private readonly ILocalStorageService _localStorage;
     private readonly WebHostEnvironment _hostEnvironment;
 
-    public DefaultApiService(HttpClient httpClient, ILocalStorageService localStorage, IServiceProvider sp, WebHostEnvironment hostEnvironment)
+    public CustomHttpClient(HttpClient httpClient, ILocalStorageService localStorage, IServiceProvider sp, WebHostEnvironment hostEnvironment)
     {
         HttpClient = httpClient;
-        HttpClient.BaseAddress = new Uri("https://localhost:7229/api/");
+        //We move address config setting in the service registration
+        //HttpClient.BaseAddress = new Uri("https://localhost:7229/api/");
         HttpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
         HttpClient.EnableIntercept(sp);
 

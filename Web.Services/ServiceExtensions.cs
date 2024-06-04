@@ -1,7 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Extension.Services;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Services.Extensions;
 using Services.IRepositories;
@@ -14,7 +16,7 @@ namespace Services;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection ConfigureHTTPServices(this IServiceCollection services)
+    public static IServiceCollection ConfigureHTTPServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped(sp => new JsonSerializerSettings
         {
@@ -24,7 +26,13 @@ public static class ServiceExtensions
         });
 
         services.AddBlazoredLocalStorage();
-        services.AddHttpClient<DefaultApiService>();
+
+        services.Configure<ApiConfiguration>(configuration.GetSection("ApiConfiguration"));
+        services.AddHttpClient<CustomHttpClient>((sp, cl) =>
+        {
+            var apiConfiguration = sp.GetRequiredService<IOptions<ApiConfiguration>>();
+            cl.BaseAddress = new Uri($"{apiConfiguration.Value.BaseAddress}/api/");
+        });
         services.AddHttpClientInterceptor(); //Should be put below the http client registration
         services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
         services.AddScoped<IServiceManager, ServiceManager>();
@@ -35,7 +43,6 @@ public static class ServiceExtensions
 
         //services.AddHttpClient("_", options =>
         //{
-        //    //IMPORTANT : Don't add additional API path like https://localhost:7229/api because the system won't recognize the additional path. It will be read as https://localhost:7229
         //    options.BaseAddress = new Uri("https://localhost:7229/api/");
         //    options.DefaultRequestHeaders.Clear();
         //}

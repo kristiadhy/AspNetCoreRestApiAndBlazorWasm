@@ -8,8 +8,7 @@ builder.Services.ConfigureServices(configuration, host);
 builder.WebHost.UseKestrel(sp => sp.AddServerHeader = false);
 
 var app = builder.Build();
-var env = app.Environment;
 
-app.UseAppConfigurations(env);
+app.UseAppConfigurations();
 
 app.Run();

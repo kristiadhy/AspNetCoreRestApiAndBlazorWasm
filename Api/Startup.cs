@@ -12,6 +12,10 @@ using Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
+//IMPORTANT :
+//1. Here we use asp.net core as hosted server to our webassembly project. That's why you will find there are some settings in the services and app for webassembly
+
+
 public static class Startup
 {
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -60,29 +64,34 @@ public static class Startup
 
         host.UseDefaultServiceProvider(sp => sp.ValidateOnBuild = true);
 
-        //We use AddAuthentication() in Jwt installer service
-        //services.AddAuthentication();
+        //We use services.AddAuthentication() in Jwt installer service
 
         return services;
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public static IApplicationBuilder UseAppConfigurations(this IApplicationBuilder app, IWebHostEnvironment env)
+    public static WebApplication UseAppConfigurations(this WebApplication app)
     {
-        if (env.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.UseWebAssemblyDebugging();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         //Use global exception handling middleware
         app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CleanArchitecture.Api v1"));
+        //app.UseSwaggerUI(config => config.SwaggerEndpoint("/swagger/v1/swagger.json", "CleanArchitecture.Api v1"));
 
         app.UseSerilogRequestLogging();
 
         app.UseHttpsRedirection();
+
+        //We use below configuration to hosted the blazor webassembly in our asp net core project
+        app.UseBlazorFrameworkFiles();
+        app.UseStaticFiles();
 
         app.UseCors("CorsPolicy");
 
@@ -92,12 +101,12 @@ public static class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints =>
-        {
-            //By using .RequireAuthorization() we don't need to put [Authorize] on every controller, it's implemented by default.
-            //If you want to allow controller to be access publicly, you can set [AllowAnonymous] on controller.
-            endpoints.MapControllers().RequireAuthorization();
-        });
+        app.MapRazorPages();
+        //By using .RequireAuthorization() we don't need to put [Authorize] on every controller, it's implemented by default.
+        //If you want to allow controller to be access publicly, you can set [AllowAnonymous] on controller.
+        app.MapControllers().RequireAuthorization();
+
+        app.MapFallbackToFile("index.html");
 
         return app;
     }

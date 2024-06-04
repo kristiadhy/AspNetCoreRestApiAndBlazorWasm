@@ -10,12 +10,12 @@ namespace Services.Repositories;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly DefaultApiService _client;
+    private readonly CustomHttpClient _client;
     private readonly JsonSerializerSettings _options;
     private readonly AuthenticationStateProvider _authStateProvider;
     private readonly ILocalStorageService _localStorage;
 
-    public AuthenticationService(DefaultApiService client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, JsonSerializerSettings options)
+    public AuthenticationService(CustomHttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, JsonSerializerSettings options)
     {
         _client = client;
         _options = options;
