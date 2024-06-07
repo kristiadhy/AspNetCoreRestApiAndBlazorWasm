@@ -1,4 +1,4 @@
-﻿using Application.Repositories;
+﻿using Application.IRepositories;
 using Domain.Entities;
 using Domain.Parameters;
 using Microsoft.EntityFrameworkCore;
@@ -7,11 +7,11 @@ using Persistence.Extensions;
 
 namespace Persistence.Repositories;
 
-public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
+public sealed class CustomerRepo : MethodBase<CustomerModel>, ICustomerRepo
 {
     public CustomerRepo(AppDBContext dbContext) : base(dbContext) { }
 
-    public async Task<PagedList<CustomerMD>> GetAllAsync(CustomerParam customerParam, bool trackChanges)
+    public async Task<PagedList<CustomerModel>> GetAllAsync(CustomerParam customerParam, bool trackChanges)
     {
         var customers = await FindAll(trackChanges)
             .Sort(customerParam.OrderBy) //It's a local method
@@ -21,10 +21,10 @@ public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
 
         var count = await FindAll(trackChanges).CountAsync();
 
-        return new PagedList<CustomerMD>(customers, count, customerParam.PageNumber, customerParam.PageSize);
+        return new PagedList<CustomerModel>(customers, count, customerParam.PageNumber, customerParam.PageSize);
     }
 
-    public async Task<PagedList<CustomerMD>> GetByParametersAsync(CustomerParam customerParam, bool trackChanges)
+    public async Task<PagedList<CustomerModel>> GetByParametersAsync(CustomerParam customerParam, bool trackChanges)
     {
         var customers = await FindAll(trackChanges)
             .SearchByName(customerParam.srcByName) //It's a local method
@@ -37,10 +37,10 @@ public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
             .SearchByName(customerParam.srcByName)
             .CountAsync();
 
-        return new PagedList<CustomerMD>(customers, count, customerParam.PageNumber, customerParam.PageSize);
+        return new PagedList<CustomerModel>(customers, count, customerParam.PageNumber, customerParam.PageSize);
     }
 
-    public async Task<CustomerMD?> GetByIDAsync(Guid customerID, bool trackChanges)
+    public async Task<CustomerModel?> GetByIDAsync(Guid customerID, bool trackChanges)
     {
         var customer = await FindByCondition(x => x.CustomerID == customerID, trackChanges).FirstOrDefaultAsync();
         if (customer is not null)
@@ -49,17 +49,17 @@ public sealed class CustomerRepo : MethodBase<CustomerMD>, ICustomerRepo
             return null;
     }
 
-    public void CreateEntity(CustomerMD entity, bool trackChanges)
+    public void CreateEntity(CustomerModel entity, bool trackChanges)
     {
         Create(entity);
     }
 
-    public void UpdateEntity(CustomerMD entity, bool trackChanges)
+    public void UpdateEntity(CustomerModel entity, bool trackChanges)
     {
         Update(entity);
     }
 
-    public void DeleteEntity(CustomerMD entity, bool trackChanges)
+    public void DeleteEntity(CustomerModel entity, bool trackChanges)
     {
         Delete(entity);
     }

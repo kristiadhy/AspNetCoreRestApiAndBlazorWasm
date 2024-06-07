@@ -7,7 +7,7 @@ using WebAssembly.StateManagement;
 
 namespace WebAssembly.Pages;
 
-public partial class CustomerL
+public partial class CustomerDisplay
 {
     [Inject]
     NavigationManager NavigationManager { get; set; } = default!;

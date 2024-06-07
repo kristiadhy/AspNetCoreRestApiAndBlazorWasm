@@ -7,7 +7,8 @@ internal class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CustomerMD, CustomerDTO>().ReverseMap();
-        CreateMap<UserRegistrationDTO, UserMD>();
+        CreateMap<CustomerModel, CustomerDTO>().ReverseMap();
+        CreateMap<SupplierModel, SupplierDto>().ReverseMap();
+        CreateMap<UserRegistrationDTO, UserModel>();
     }
 }

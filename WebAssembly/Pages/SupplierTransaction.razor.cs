@@ -7,7 +7,7 @@ using WebAssembly.StateManagement;
 
 namespace WebAssembly.Pages;
 
-public partial class CustomerT
+public partial class SupplierTransaction
 {
     [Inject]
     NavigationManager NavigationManager { get; set; } = default!;
@@ -18,42 +18,42 @@ public partial class CustomerT
     [Inject]
     IServiceManager ServiceManager { get; set; } = default!;
     [Inject]
-    CustomerState CustomerState { get; set; } = default!;
+    SupplierState SupplierState { get; set; } = default!;
 
-    [Parameter] public Guid? ParamCustomerID { get; set; }
+    [Parameter] public Guid? ParamSupplierID { get; set; }
 
     protected string PagePathText = string.Empty;
     protected string FormHeaderText = string.Empty;
     protected GlobalEnum.FormStatus FormStatus = GlobalEnum.FormStatus.New;
     protected bool IsSaving = false;
-    protected CustomerParam CustomerParameter = new();
+    protected SupplierParam SupplierParameter = new();
 
     protected override async Task OnParametersSetAsync()
     {
-        if (ParamCustomerID is not null)
+        if (ParamSupplierID is not null)
         {
-            CustomerState.Customer = await ServiceManager.CustomerService.GetCustomerByID((Guid)ParamCustomerID);
+            SupplierState.Supplier = await ServiceManager.SupplierService.GetSupplierByID((Guid)ParamSupplierID);
 
             PagePathText = GlobalEnum.FormStatus.Edit.ToString();
-            FormHeaderText = $"{GlobalEnum.FormStatus.Edit.ToString()} Existing Customer";
+            FormHeaderText = $"{GlobalEnum.FormStatus.Edit.ToString()} Existing Supplier";
             FormStatus = GlobalEnum.FormStatus.Edit;
         }
         else
         {
             PagePathText = GlobalEnum.FormStatus.New.ToString();
-            FormHeaderText = $"Create {GlobalEnum.FormStatus.New.ToString()} Customer";
+            FormHeaderText = $"Create {GlobalEnum.FormStatus.New.ToString()} Supplier";
             FormStatus = GlobalEnum.FormStatus.New;
         }
     }
 
     public void EvBackToPrevious()
     {
-        NavigationManager.NavigateTo($"customer");
+        NavigationManager.NavigateTo($"supplier");
     }
 
-    public async Task SubmitAsync(CustomerDTO customer)
+    public async Task SubmitAsync(SupplierDto supplier)
     {
-        bool confirmationStatus = await ConfirmationModalService.SavingConfirmation("Customer");
+        bool confirmationStatus = await ConfirmationModalService.SavingConfirmation("Supplier");
         if (!confirmationStatus)
             return;
 
@@ -62,22 +62,22 @@ public partial class CustomerT
 
         if (FormStatus == GlobalEnum.FormStatus.New)
         {
-            customer.CustomerID = null;
-            var response = await ServiceManager.CustomerService.Create(customer);
+            supplier.SupplierID = null;
+            var response = await ServiceManager.SupplierService.Create(supplier);
             if (response.IsSuccessStatusCode)
-                NotificationService.SaveNotification("A new customer added");
+                NotificationService.SaveNotification("A new supplier added");
         }
         else if (FormStatus == GlobalEnum.FormStatus.Edit)
         {
-            var response = await ServiceManager.CustomerService.Update(customer);
+            var response = await ServiceManager.SupplierService.Update(supplier);
             if (response.IsSuccessStatusCode)
             {
-                NotificationService.SaveNotification("Customer updated");
+                NotificationService.SaveNotification("Supplier updated");
             }
         }
 
         //Load customer state after making changes
-        await CustomerState.LoadCustomers();
+        await SupplierState.LoadSuppliers();
 
         IsSaving = false;
     }

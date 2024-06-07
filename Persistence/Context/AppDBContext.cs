@@ -6,13 +6,13 @@ using Persistence.Configurations;
 namespace Persistence.Context;
 
 //Our class now inherits from the IdentityDbContext class and not DbContext because we want to integrate our context with Identity
-public class AppDBContext : IdentityDbContext<UserMD>
+public class AppDBContext : IdentityDbContext<UserModel>
 {
     public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
     {
     }
 
-    public DbSet<CustomerMD> Customers { get; set; }
+    public DbSet<CustomerModel> Customers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,6 +26,7 @@ public class AppDBContext : IdentityDbContext<UserMD>
         //modelBuilder.ApplyConfigurationsFromAssembly(typeof(CustomerConfiguration).Assembly);
 
         modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+        modelBuilder.ApplyConfiguration(new SupplierConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
     }
 }

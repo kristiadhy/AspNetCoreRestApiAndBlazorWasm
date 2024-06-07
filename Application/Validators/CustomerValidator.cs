@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators;
 
-public class CustomerValidator : AbstractValidator<CustomerMD>
+public class CustomerValidator : AbstractValidator<CustomerModel>
 {
     public CustomerValidator()
     {
@@ -36,7 +36,7 @@ public class CustomerValidator : AbstractValidator<CustomerMD>
         return email?.ToLower() != "mail@my.com";
     }
 
-    public void ValidateInput(CustomerMD customerMD)
+    public void ValidateInput(CustomerModel customerMD)
     {
         var validationResult = Validate(customerMD);
         if (!validationResult.IsValid)

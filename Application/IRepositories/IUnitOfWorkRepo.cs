@@ -1,4 +1,4 @@
-﻿namespace Application.Repositories;
+﻿namespace Application.IRepositories;
 
 public interface IUnitOfWorkRepo
 {

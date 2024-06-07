@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class CustomerMD : BaseEntity
+public class CustomerModel : BaseEntity
 {
     public Guid CustomerID { get; set; }
     public string? CustomerName { get; set; }

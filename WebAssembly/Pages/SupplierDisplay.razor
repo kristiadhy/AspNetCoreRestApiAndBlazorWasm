@@ -1,0 +1,98 @@
+﻿@page "/supplier"
+
+<PageTitle>@($"{GlobalVariable.AppName} | Supplier")</PageTitle>
+
+<div class="rz-mb-6">
+    <RadzenBreadCrumb>
+        <RadzenBreadCrumbItem Path="/supplier"
+                              Text="Supplier" />
+        <RadzenBreadCrumbItem Text="List" />
+    </RadzenBreadCrumb>
+</div>
+
+<MainMenuButton LoadDataClicked="EvReloadData"
+                CreateNewClicked="EvCreateNew" />
+
+<RadzenDataGrid @ref="SupplierGrid"
+                IsLoading=@isLoading
+                Count="@SupplierState.MetaData.TotalCount"
+                Data="@SupplierState.SupplierList"
+                SelectionMode="DataGridSelectionMode.Single"
+                AllowSorting="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                PageSize="@SupplierState.MetaData.PageSize"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                AllowColumnResize="true"
+                AllowColumnReorder="false"
+                GridLines="DataGridGridLines.Both"
+                ColumnWidth="150px"
+                class="my-4">
+    <Columns>
+        <RadzenDataGridColumn Width="50px"
+                              Title="#" Filterable="false"
+                              Sortable="false"
+                              TextAlign="TextAlign.Center">
+            <Template Context="data">
+                @(SupplierState.SupplierList.IndexOf(data) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Property="SupplierID"
+                              Visible=false
+                              Filterable="false"
+                              Title="ID"
+                              Frozen="true"
+                              TextAlign="TextAlign.Center">
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Property="SupplierName"
+                              Title="Name"
+                              Frozen="true" />
+
+        <RadzenDataGridColumn Property="PhoneNumber"
+                              Title="Phone" />
+
+        <RadzenDataGridColumn Property="Address"
+                              Title="Address" />
+
+        <RadzenDataGridColumn Property="Email"
+                              Title="Email" />
+
+        <RadzenDataGridColumn Property="ContactPerson"
+                              Title="Contact Person" />
+
+        <RadzenDataGridColumn Property="CPPhone"
+                              Title="Phone" />
+
+        <RadzenDataGridColumn Property="Note"
+                              Title="Note" />
+
+        <RadzenDataGridColumn Context="SupplierDto"
+                              Title="Action"
+                              Filterable="false"
+                              Sortable="false"
+                              TextAlign="TextAlign.Left"
+                              Frozen="true"
+                              FrozenPosition="FrozenColumnPosition.Right">
+            <Template Context="SupplierDto">
+                <RadzenButton Icon="edit"
+                              ButtonStyle="ButtonStyle.Light"
+                              Variant="Variant.Flat"
+                              Size="ButtonSize.Medium"
+                              Click="@(args => EvEditRow(SupplierDto))"
+                              @onclick:stopPropagation="true">
+                </RadzenButton>
+                <RadzenButton ButtonStyle="ButtonStyle.Danger"
+                              Icon="delete"
+                              Variant="Variant.Flat"
+                              Shade="Shade.Lighter"
+                              Size="ButtonSize.Medium"
+                              class="my-1 ms-1"
+                              Click="@(async args => await EvDeleteRow(SupplierDto))"
+                              @onclick:stopPropagation="true">
+                </RadzenButton>
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>

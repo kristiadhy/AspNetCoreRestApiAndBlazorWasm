@@ -1,5 +1,5 @@
 ﻿using Application.Exceptions;
-using Application.Repositories;
+using Application.IRepositories;
 using Application.Validators;
 using AutoMapper;
 using Domain.DTO;
@@ -50,13 +50,13 @@ internal sealed class CustomerService : ICustomerService
 
     public async Task<CustomerDTO> CreateAsync(CustomerDTO customerDto, bool trackChanges, CancellationToken cancellationToken = default)
     {
-        var customerMDForValidation = _mapper.Map<CustomerMD>(customerDto);
+        var customerMDForValidation = _mapper.Map<CustomerModel>(customerDto);
         var validator = new CustomerValidator();
         validator.ValidateInput(customerMDForValidation);
 
         _logger.Information("Insert new customer : {customerName}", customerDto.CustomerName);
 
-        var customerMD = _mapper.Map<CustomerMD>(customerDto);
+        var customerMD = _mapper.Map<CustomerModel>(customerDto);
         _repositoryManager.CustomerRepo.CreateEntity(customerMD, trackChanges);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
 
@@ -67,13 +67,13 @@ internal sealed class CustomerService : ICustomerService
 
     public async Task UpdateAsync(CustomerDTO customerDto, bool trackChanges, CancellationToken cancellationToken = default)
     {
-        var customerMDForValidation = _mapper.Map<CustomerMD>(customerDto);
+        var customerMDForValidation = _mapper.Map<CustomerModel>(customerDto);
         var validator = new CustomerValidator();
         validator.ValidateInput(customerMDForValidation);
 
         _logger.Information("Update customer : {customerName}", customerDto.CustomerName);
 
-        CustomerMD customerToUpdate = _mapper.Map<CustomerMD>(customerDto);
+        CustomerModel customerToUpdate = _mapper.Map<CustomerModel>(customerDto);
         _repositoryManager.CustomerRepo.UpdateEntity(customerToUpdate, trackChanges);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
     }
@@ -96,7 +96,7 @@ internal sealed class CustomerService : ICustomerService
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<(CustomerDTO customerToPatch, CustomerMD customer)> GetCustomerForPatchAsync(Guid customerID, bool empTrackChanges, CancellationToken cancellationToken = default)
+    public async Task<(CustomerDTO customerToPatch, CustomerModel customer)> GetCustomerForPatchAsync(Guid customerID, bool empTrackChanges, CancellationToken cancellationToken = default)
     {
         var customer = await _repositoryManager.CustomerRepo.GetByIDAsync(customerID, empTrackChanges);
         if (customer is null)
@@ -107,7 +107,7 @@ internal sealed class CustomerService : ICustomerService
         return (customerToPatch, customer);
     }
 
-    public async Task SaveChangesForPatchAsync(CustomerDTO customerToPatch, CustomerMD customer, CancellationToken cancellationToken = default)
+    public async Task SaveChangesForPatchAsync(CustomerDTO customerToPatch, CustomerModel customer, CancellationToken cancellationToken = default)
     {
         _mapper.Map(customerToPatch, customer);
         await _repositoryManager.UnitOfWorkRepo.SaveChangesAsync(cancellationToken);

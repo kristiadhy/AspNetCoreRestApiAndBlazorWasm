@@ -1,12 +1,11 @@
-﻿using Application.IRepositories;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Parameters;
 
-namespace Application.Repositories;
+namespace Application.IRepositories;
 
-public interface ICustomerRepo : IRepositoryBase<CustomerMD>
+public interface ICustomerRepo : IRepositoryBase<CustomerModel>
 {
-    Task<PagedList<CustomerMD>> GetAllAsync(CustomerParam customerParam, bool trackChanges);
-    Task<PagedList<CustomerMD>> GetByParametersAsync(CustomerParam customerParam, bool trackChanges);
-    Task<CustomerMD?> GetByIDAsync(Guid customerID, bool trackChanges);
+    Task<PagedList<CustomerModel>> GetAllAsync(CustomerParam customerParam, bool trackChanges);
+    Task<PagedList<CustomerModel>> GetByParametersAsync(CustomerParam customerParam, bool trackChanges);
+    Task<CustomerModel?> GetByIDAsync(Guid customerID, bool trackChanges);
 }

@@ -9,7 +9,7 @@ public class IdentityInstaller : IServiceInstallers
 {
     public void InstallServices(IServiceCollection services, IConfiguration configuration, IHostBuilder host)
     {
-        var builder = services.AddIdentity<UserMD, IdentityRole>(o =>
+        var builder = services.AddIdentity<UserModel, IdentityRole>(o =>
         {
             //Set rule for password
             o.Password.RequireDigit = true;

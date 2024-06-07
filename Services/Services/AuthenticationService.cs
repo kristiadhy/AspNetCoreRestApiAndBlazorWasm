@@ -1,5 +1,5 @@
 ﻿using Application.Exceptions;
-using Application.Repositories;
+using Application.IRepositories;
 using Application.Validators;
 using AutoMapper;
 using Domain.DTO;
@@ -20,13 +20,13 @@ public class AuthenticationService : IAuthenticationService
     private readonly IRepositoryManager _repositoryManager;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
-    private readonly UserManager<UserMD> _userManager; //This class is use to provide the APIs for managing users in a persistence store
+    private readonly UserManager<UserModel> _userManager; //This class is use to provide the APIs for managing users in a persistence store
     private readonly IConfiguration _configuration;
 
-    private UserMD? _user;
+    private UserModel? _user;
     private readonly JwtConfiguration _jwtConfiguration;
 
-    public AuthenticationService(IRepositoryManager repositoryManager, IMapper mapper, ILogger logger, UserManager<UserMD> userManager, IConfiguration configuration)
+    public AuthenticationService(IRepositoryManager repositoryManager, IMapper mapper, ILogger logger, UserManager<UserModel> userManager, IConfiguration configuration)
     {
         _repositoryManager = repositoryManager;
         _mapper = mapper;
@@ -45,7 +45,7 @@ public class AuthenticationService : IAuthenticationService
         var validator = new UserDtoValidator();
         validator.ValidateInput(userForRegistration);
 
-        var user = _mapper.Map<UserMD>(userForRegistration);
+        var user = _mapper.Map<UserModel>(userForRegistration);
         //The create async method and add to roles async method are the built in method provided by the microsoft identity class
         var result = await _userManager.CreateAsync(user, userForRegistration.Password!);
         if (result.Succeeded)

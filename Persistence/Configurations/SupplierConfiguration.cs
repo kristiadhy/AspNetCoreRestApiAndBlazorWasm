@@ -3,16 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;
-
-internal sealed class CustomerConfiguration : IEntityTypeConfiguration<CustomerModel>
+internal sealed class SupplierConfiguration : IEntityTypeConfiguration<SupplierModel>
 {
-    public void Configure(EntityTypeBuilder<CustomerModel> builder)
+    public void Configure(EntityTypeBuilder<SupplierModel> builder)
     {
-        builder.ToTable("M01CUSTOMERS");
+        builder.ToTable("M02SUPPLIERS");
 
-        builder.HasKey(c => c.CustomerID);
-        builder.Property(c => c.CustomerID).HasDefaultValueSql("NEWID()");
-        builder.Property(c => c.CustomerName).IsRequired().HasMaxLength(200);
+        builder.HasKey(c => c.SupplierID);
+        builder.Property(c => c.SupplierID).HasDefaultValueSql("NEWID()");
+        builder.Property(c => c.SupplierName).IsRequired().HasMaxLength(200);
         builder.Property(c => c.PhoneNumber).HasMaxLength(50);
         builder.Property(c => c.Email).HasMaxLength(100);
         builder.Property(c => c.ContactPerson).HasMaxLength(100);
